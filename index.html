@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-tema="claro">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>PWA Brasil (PT-BR) — Aprenda PWA na prática</title>
+  <meta name="description" content="PWA educacional em português que ensina a criar e publicar PWAs, com laboratórios ao vivo.">
+  <meta name="theme-color" content="#0b57d0">
+
+  <!-- Liga a página ao Web App Manifest (Módulo 2) -->
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="PWA Brasil">
+
+  <!-- Aplica o tema salvo ANTES de pintar a tela, evitando "piscar" branco no Dark Mode -->
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('pwa-brasil:tema');
+        if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'escuro' : 'claro';
+        document.documentElement.setAttribute('data-tema', t);
+      } catch (e) {}
+    })();
+  </script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <a class="pular-conteudo" href="#conteudo">Pular para o conteúdo</a>
+
+  <!-- ============ SPLASH SCREEN (~2,8 s) ============ -->
+  <div id="splash" class="splash" role="status" aria-live="polite">
+    <div class="splash__logo" aria-hidden="true">
+      <svg viewBox="0 0 100 100" width="96" height="96">
+        <rect width="100" height="100" rx="22" fill="#fff"/>
+        <rect x="28" y="16" width="44" height="68" rx="6" fill="#0b57d0"/>
+        <rect x="31.5" y="21" width="37" height="58" rx="3" fill="#009c3b"/>
+        <polygon points="50,33 65,50 50,67 35,50" fill="#ffdf00"/>
+        <circle cx="50" cy="50" r="8" fill="#002776"/>
+      </svg>
+    </div>
+    <h1 class="splash__titulo">PWA Brasil (PT-BR)</h1>
+    <p class="splash__sub">Aprenda PWA na prática</p>
+    <div class="splash__barra" aria-hidden="true"><span></span></div>
+  </div>
+
+  <!-- ============ CABEÇALHO ============ -->
+  <header class="topo">
+    <button id="menu-btn" class="btn-icone" aria-label="Abrir menu" aria-controls="drawer" aria-expanded="false">
+      <span class="hamburger" aria-hidden="true"></span>
+    </button>
+    <a class="topo__marca" href="#modulo-1">PWA Brasil <small>(PT-BR)</small></a>
+
+    <!-- Indicadores em tempo real: rede + Service Worker -->
+    <div class="status" aria-live="polite">
+      <span id="badge-rede" class="badge badge--ok" title="Estado da rede (navigator.onLine)">
+        <i class="ponto"></i><span>Online</span>
+      </span>
+      <span id="badge-sw" class="badge badge--neutro" title="Estado do Service Worker">
+        <i class="ponto"></i><span>SW: verificando…</span>
+      </span>
+    </div>
+
+    <button id="tema-btn" class="btn-icone" aria-label="Alternar tema claro/escuro" aria-pressed="false">
+      <span id="tema-icone" aria-hidden="true">🌙</span>
+    </button>
+  </header>
+
+  <!-- Banner "Nova versão disponível" (Módulo 5) -->
+  <div id="banner-atualizacao" class="banner" role="alert" hidden>
+    <span><strong>Nova versão disponível.</strong> Atualize para receber o conteúdo mais recente.</span>
+    <span class="banner__acoes">
+      <button id="btn-atualizar" class="btn btn--primario btn--pequeno">Atualizar agora</button>
+      <button id="btn-dispensar" class="btn btn--fantasma btn--pequeno">Depois</button>
+    </span>
+  </div>
+
+  <!-- ============ MENU LATERAL (DRAWER) ============ -->
+  <div id="overlay" class="overlay" hidden></div>
+  <aside id="drawer" class="drawer" aria-label="Menu de módulos" aria-hidden="true">
+    <div class="drawer__cabecalho">
+      <strong>PWA Brasil <small>(PT-BR)</small></strong>
+      <button id="fechar-menu" class="btn-icone" aria-label="Fechar menu">✕</button>
+    </div>
+
+    <div class="progresso" aria-label="Seu progresso">
+      <div class="progresso__trilho"><div id="progresso-barra" class="progresso__barra" style="width:0%"></div></div>
+      <small id="progresso-texto">0 de 5 módulos concluídos</small>
+    </div>
+
+    <nav>
+      <p class="drawer__titulo">Módulos</p>
+      <ul class="menu">
+        <li><a href="#modulo-1" data-modulo="modulo-1"><span class="menu__num">1</span> Fundamentos do PWA <em class="menu__ok" aria-hidden="true"></em></a></li>
+        <li><a href="#modulo-2" data-modulo="modulo-2"><span class="menu__num">2</span> Manifest e Instalação <em class="menu__ok" aria-hidden="true"></em></a></li>
+        <li><a href="#modulo-3" data-modulo="modulo-3"><span class="menu__num">3</span> Service Workers e Cache <em class="menu__ok" aria-hidden="true"></em></a></li>
+        <li><a href="#modulo-4" data-modulo="modulo-4"><span class="menu__num">4</span> Recursos Nativos <em class="menu__ok" aria-hidden="true"></em></a></li>
+        <li><a href="#modulo-5" data-modulo="modulo-5"><span class="menu__num">5</span> Auditoria e Deploy <em class="menu__ok" aria-hidden="true"></em></a></li>
+      </ul>
+      <p class="drawer__titulo">Laboratórios ao vivo</p>
+      <ul class="menu menu--labs">
+        <li><a href="#lab-checklist" data-modulo="modulo-1">🧪 Checklist de prontidão</a></li>
+        <li><a href="#lab-instalacao" data-modulo="modulo-2">🧪 Instalar + Inspetor de Manifest</a></li>
+        <li><a href="#lab-cache" data-modulo="modulo-3">🧪 Inspetor de Cache</a></li>
+        <li><a href="#lab-nativo" data-modulo="modulo-4">🧪 Compartilhar e Notificações</a></li>
+        <li><a href="#lab-atualizacao" data-modulo="modulo-5">🧪 Ciclo de atualização</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- ============ CONTEÚDO ============ -->
+  <main id="conteudo" class="conteudo" tabindex="-1">
+
+    <!-- ================= MÓDULO 1 ================= -->
+    <section id="modulo-1" class="modulo" data-titulo="Módulo 1 — Fundamentos do PWA">
+      <header class="modulo__cab">
+        <p class="selo">Módulo 1 de 5</p>
+        <h2>Fundamentos do PWA</h2>
+        <p class="lead">Um Progressive Web App é um site que se comporta como aplicativo: instalável, rápido, confiável e capaz de funcionar sem internet.</p>
+      </header>
+
+      <h3>O que é um PWA?</h3>
+      <p>Um PWA é construído com tecnologias web comuns (HTML, CSS e JavaScript), mas adiciona três peças que mudam o jogo: <strong>HTTPS</strong>, um <strong>Web App Manifest</strong> e um <strong>Service Worker</strong>. Juntas, elas permitem instalar o site na tela inicial e usá-lo offline.</p>
+
+      <h3>PWA × App nativo × Site tradicional</h3>
+      <div class="tabela-wrap">
+        <table>
+          <thead><tr><th>Critério</th><th>Site tradicional</th><th>PWA</th><th>App nativo</th></tr></thead>
+          <tbody>
+            <tr><td>Instalável</td><td>Não</td><td>Sim (sem loja)</td><td>Sim (via loja)</td></tr>
+            <tr><td>Funciona offline</td><td>Raramente</td><td>Sim</td><td>Sim</td></tr>
+            <tr><td>Atualização</td><td>Imediata</td><td>Automática, ao abrir</td><td>Depende da loja/usuário</td></tr>
+            <tr><td>Base de código</td><td>Web</td><td>Web (única para todas as plataformas)</td><td>Uma por plataforma</td></tr>
+            <tr><td>Acesso a hardware</td><td>Limitado</td><td>Bom e crescente</td><td>Total</td></tr>
+            <tr><td>Peso de instalação</td><td>Nenhum</td><td>Muito baixo</td><td>Alto</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>As três peças</h3>
+      <ul class="lista-cards">
+        <li><strong>HTTPS</strong>Service Workers só funcionam em contexto seguro (exceção: <code>localhost</code> para desenvolvimento).</li>
+        <li><strong>Manifest</strong>Um JSON que descreve nome, ícones, cores e modo de exibição do app.</li>
+        <li><strong>Service Worker</strong>Um script que fica entre a página e a rede e decide o que vem do cache.</li>
+      </ul>
+
+      <h3>Esqueleto mínimo de um PWA</h3>
+      <pre class="codigo"><code>&lt;!-- 1) Liga o manifest --&gt;
+&lt;link rel="manifest" href="manifest.webmanifest"&gt;
+
+&lt;script&gt;
+  // 2) Registra o Service Worker (só se o navegador suportar)
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js');
+  }
+&lt;/script&gt;</code></pre>
+
+      <div id="lab-checklist" class="lab">
+        <h3>🧪 Laboratório: Checklist de prontidão PWA</h3>
+        <p>Marque manualmente os itens que você já cumpriu <em>ou</em> clique em <strong>Verificar este app</strong> para que o PWA Brasil se auto-inspecione usando APIs reais do navegador.</p>
+        <ul id="checklist" class="checklist">
+          <li><label><input type="checkbox" data-item="https"> Servido via HTTPS (ou localhost)</label><span class="auto" data-auto="https"></span></li>
+          <li><label><input type="checkbox" data-item="manifest"> Possui &lt;link rel="manifest"&gt; válido</label><span class="auto" data-auto="manifest"></span></li>
+          <li><label><input type="checkbox" data-item="sw"> Service Worker registrado e controlando a página</label><span class="auto" data-auto="sw"></span></li>
+          <li><label><input type="checkbox" data-item="icones"> Ícones 192px e 512px (incluindo maskable)</label><span class="auto" data-auto="icones"></span></li>
+          <li><label><input type="checkbox" data-item="offline"> Responde offline (App Shell em cache)</label><span class="auto" data-auto="offline"></span></li>
+          <li><label><input type="checkbox" data-item="viewport"> Meta viewport para mobile</label><span class="auto" data-auto="viewport"></span></li>
+          <li><label><input type="checkbox" data-item="tema"> Define theme-color</label><span class="auto" data-auto="tema"></span></li>
+        </ul>
+        <div class="lab__acoes">
+          <button id="btn-auto-checklist" class="btn btn--primario">Verificar este app</button>
+          <button id="btn-limpar-checklist" class="btn btn--fantasma">Limpar marcações</button>
+        </div>
+        <p id="checklist-resultado" class="lab__saida" aria-live="polite">0 de 7 itens concluídos.</p>
+      </div>
+
+      <footer class="modulo__rodape">
+        <span></span>
+        <button class="btn btn--sucesso btn-concluir" data-modulo="modulo-1">Marcar módulo como concluído</button>
+        <a class="btn btn--primario" href="#modulo-2" data-nav="modulo-2">Próximo: Manifest →</a>
+      </footer>
+    </section>
+
+    <!-- ================= MÓDULO 2 ================= -->
+    <section id="modulo-2" class="modulo" data-titulo="Módulo 2 — Web App Manifest e Instalação" hidden>
+      <header class="modulo__cab">
+        <p class="selo">Módulo 2 de 5</p>
+        <h2>Web App Manifest e Instalação</h2>
+        <p class="lead">O manifest é o "RG" do seu app: diz ao navegador como ele se chama, que aparência tem e como deve abrir depois de instalado.</p>
+      </header>
+
+      <h3>Propriedades essenciais</h3>
+      <dl class="definicoes">
+        <dt><code>name</code> / <code>short_name</code></dt>
+        <dd>Nome completo (telas de instalação) e nome curto (abaixo do ícone na tela inicial).</dd>
+        <dt><code>start_url</code></dt>
+        <dd>URL aberta ao iniciar o app instalado. Use caminho relativo para funcionar em subpastas (GitHub Pages). Parâmetros como <code>?source=pwa</code> ajudam a medir uso.</dd>
+        <dt><code>scope</code></dt>
+        <dd>Define quais URLs pertencem ao app. Links fora do escopo abrem no navegador comum.</dd>
+        <dt><code>display</code></dt>
+        <dd><code>standalone</code> (sem barra do navegador, o mais comum), <code>minimal-ui</code>, <code>fullscreen</code> ou <code>browser</code>.</dd>
+        <dt><code>icons</code> e <code>purpose: "maskable"</code></dt>
+        <dd>Ícones <em>any</em> são exibidos como estão. Ícones <em>maskable</em> têm uma "zona segura" central (cerca de 80%) para o Android recortá-los em círculo, quadrado arredondado etc. sem cortar o desenho.</dd>
+        <dt><code>theme_color</code> / <code>background_color</code></dt>
+        <dd>Cor da barra de título do app e cor de fundo da tela de abertura.</dd>
+      </dl>
+
+      <h3>Manifest do PWA Brasil (trecho)</h3>
+      <pre class="codigo"><code>{
+  "name": "PWA Brasil (PT-BR)",
+  "short_name": "PWA Brasil",
+  "start_url": "./index.html?source=pwa", // onde o app instalado abre
+  "scope": "./",                          // área controlada pelo app
+  "display": "standalone",                // aparência de app nativo
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512",
+      "type": "image/png", "purpose": "maskable" } // recorte adaptativo
+  ]
+}</code></pre>
+      <p class="nota">Observação: JSON puro não aceita comentários. Os comentários acima são apenas didáticos; o arquivo real não os contém.</p>
+
+      <h3>Capturando o evento de instalação</h3>
+      <pre class="codigo"><code>let eventoInstalacao = null;
+
+// O navegador dispara este evento quando o app É instalável.
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();      // impede o mini-aviso automático
+  eventoInstalacao = e;    // guarda para usar quando o usuário clicar
+  botaoInstalar.disabled = false;
+});
+
+botaoInstalar.addEventListener('click', async () =&gt; {
+  eventoInstalacao.prompt();                       // mostra o diálogo nativo
+  const { outcome } = await eventoInstalacao.userChoice; // 'accepted' | 'dismissed'
+});</code></pre>
+
+      <div id="lab-instalacao" class="lab">
+        <h3>🧪 Laboratório: Instalar e inspecionar o manifest</h3>
+        <div class="lab__acoes">
+          <button id="btn-instalar" class="btn btn--primario" disabled>Instalar PWA Brasil</button>
+        </div>
+        <p id="instalar-status" class="lab__saida" aria-live="polite">Verificando se o app pode ser instalado…</p>
+
+        <div class="lab__acoes">
+          <button id="btn-carregar-manifest" class="btn btn--secundario">Ler manifest.webmanifest agora</button>
+        </div>
+        <div id="manifest-resumo" class="resumo-manifest"></div>
+        <pre id="manifest-saida" class="codigo codigo--saida" aria-live="polite">Clique em "Ler manifest" para buscar o arquivo real via fetch().</pre>
+        <p class="nota">Safari no iOS não dispara <code>beforeinstallprompt</code>: lá, use <em>Compartilhar → Adicionar à Tela de Início</em>.</p>
+      </div>
+
+      <footer class="modulo__rodape">
+        <a class="btn btn--fantasma" href="#modulo-1" data-nav="modulo-1">← Anterior</a>
+        <button class="btn btn--sucesso btn-concluir" data-modulo="modulo-2">Marcar módulo como concluído</button>
+        <a class="btn btn--primario" href="#modulo-3" data-nav="modulo-3">Próximo: Service Workers →</a>
+      </footer>
+    </section>
+
+    <!-- ================= MÓDULO 3 ================= -->
+    <section id="modulo-3" class="modulo" data-titulo="Módulo 3 — Service Workers e Estratégias de Cache" hidden>
+      <header class="modulo__cab">
+        <p class="selo">Módulo 3 de 5</p>
+        <h2>Service Workers e Estratégias de Cache</h2>
+        <p class="lead">O Service Worker é um proxy programável que roda em segundo plano, separado da página. É ele quem torna o app confiável offline.</p>
+      </header>
+
+      <h3>Ciclo de vida</h3>
+      <ol class="passos">
+        <li><strong>register</strong> — a página pede o registro do <code>sw.js</code>.</li>
+        <li><strong>install</strong> — o SW é baixado e faz o <em>pré-cache</em> do App Shell.</li>
+        <li><strong>waiting</strong> — se já existe um SW ativo, o novo espera as abas antigas fecharem (ou <code>skipWaiting</code>).</li>
+        <li><strong>activate</strong> — assume o controle e limpa caches antigos.</li>
+        <li><strong>fetch</strong> — passa a interceptar cada requisição da página.</li>
+      </ol>
+
+      <pre class="codigo"><code>self.addEventListener('install', (e) =&gt; {
+  // Baixa e guarda os arquivos essenciais
+  e.waitUntil(caches.open('shell-v1').then((c) =&gt; c.addAll(['./', './app.js'])));
+});
+
+self.addEventListener('activate', (e) =&gt; {
+  // Apaga caches de versões antigas
+  e.waitUntil(limparCachesAntigos());
+});
+
+self.addEventListener('fetch', (e) =&gt; {
+  // Decide: cache, rede, ou os dois?
+  e.respondWith(caches.match(e.request).then((r) =&gt; r || fetch(e.request)));
+});</code></pre>
+
+      <h3>Estratégias de cache</h3>
+      <div class="grade-3">
+        <article class="cartao">
+          <h4>Cache First</h4>
+          <p>Cache → (se faltar) rede. Mais rápida. Ideal para arquivos versionados: CSS, JS, imagens, fontes.</p>
+        </article>
+        <article class="cartao">
+          <h4>Network First</h4>
+          <p>Rede → (se falhar) cache. Sempre fresca quando online. Ideal para HTML e dados que mudam.</p>
+        </article>
+        <article class="cartao">
+          <h4>Stale-While-Revalidate</h4>
+          <p>Responde com o cache e atualiza em segundo plano. Equilíbrio entre velocidade e atualidade.</p>
+        </article>
+      </div>
+
+      <h3>Estado do Service Worker agora</h3>
+      <dl id="sw-info" class="info-grade">
+        <div><dt>Suporte</dt><dd data-sw="suporte">—</dd></div>
+        <div><dt>Escopo</dt><dd data-sw="escopo">—</dd></div>
+        <div><dt>Estado</dt><dd data-sw="estado">—</dd></div>
+        <div><dt>Controlando esta página</dt><dd data-sw="controle">—</dd></div>
+        <div><dt>Versão do cache (sw.js)</dt><dd data-sw="versao">—</dd></div>
+      </dl>
+
+      <div id="lab-cache" class="lab">
+        <h3>🧪 Laboratório: Inspetor de Cache</h3>
+        <p>Lista o que o <code>CacheStorage</code> guarda neste momento (via <code>caches.keys()</code> e <code>cache.keys()</code>).</p>
+        <div class="lab__acoes">
+          <button id="btn-cache-atualizar" class="btn btn--primario">Atualizar lista</button>
+          <button id="btn-cache-limpar" class="btn btn--perigo">Limpar todo o cache</button>
+        </div>
+        <div id="cache-lista" class="cache-lista" aria-live="polite"><p class="nota">Carregando…</p></div>
+
+        <h4>Testar uma requisição simulada</h4>
+        <p>Escolha uma estratégia e faça uma requisição. O Service Worker responde de verdade e informa, pelos cabeçalhos <code>X-SW-Strategy</code> e <code>X-SW-Origem</code>, de onde veio a resposta.</p>
+        <div class="form-linha">
+          <label>Estratégia
+            <select id="lab-estrategia">
+              <option value="cache-first">Cache First</option>
+              <option value="network-first">Network First</option>
+              <option value="swr">Stale-While-Revalidate</option>
+            </select>
+          </label>
+          <label>Recurso
+            <input id="lab-recurso" type="text" value="aula-1" maxlength="40">
+          </label>
+          <label class="check-inline"><input id="lab-falhar" type="checkbox"> Simular rede fora do ar</label>
+        </div>
+        <div class="lab__acoes">
+          <button id="btn-lab-testar" class="btn btn--secundario">Fazer requisição</button>
+        </div>
+        <pre id="lab-resultado" class="codigo codigo--saida" aria-live="polite">Nenhuma requisição feita ainda. Dica: faça a mesma requisição duas vezes e compare a origem.</pre>
+      </div>
+
+      <footer class="modulo__rodape">
+        <a class="btn btn--fantasma" href="#modulo-2" data-nav="modulo-2">← Anterior</a>
+        <button class="btn btn--sucesso btn-concluir" data-modulo="modulo-3">Marcar módulo como concluído</button>
+        <a class="btn btn--primario" href="#modulo-4" data-nav="modulo-4">Próximo: Recursos Nativos →</a>
+      </footer>
+    </section>
+
+    <!-- ================= MÓDULO 4 ================= -->
+    <section id="modulo-4" class="modulo" data-titulo="Módulo 4 — Recursos Nativos e Engajamento" hidden>
+      <header class="modulo__cab">
+        <p class="selo">Módulo 4 de 5</p>
+        <h2>Recursos Nativos e Engajamento</h2>
+        <p class="lead">PWAs conversam com o sistema operacional: guardam dados, compartilham conteúdo e avisam o usuário.</p>
+      </header>
+
+      <h3>Armazenamento local</h3>
+      <ul>
+        <li><strong>localStorage</strong>: simples, síncrono, só texto (~5 MB). Este app guarda tema e progresso nele.</li>
+        <li><strong>IndexedDB</strong>: banco assíncrono para dados estruturados e grandes.</li>
+        <li><strong>CacheStorage</strong>: pares requisição/resposta, usado pelo Service Worker.</li>
+      </ul>
+      <pre class="codigo"><code>// Guardar e ler progresso do aluno
+localStorage.setItem('progresso', JSON.stringify(['modulo-1']));
+const feitos = JSON.parse(localStorage.getItem('progresso') || '[]');</code></pre>
+
+      <h3>Web Share API</h3>
+      <pre class="codigo"><code>if (navigator.share) {
+  await navigator.share({
+    title: 'PWA Brasil (PT-BR)',
+    text: 'Aprenda a criar PWAs!',
+    url: location.href
+  });
+}</code></pre>
+
+      <h3>Notificações</h3>
+      <p>Exigem <strong>permissão do usuário</strong>, que deve ser pedida após um gesto (clique), nunca ao carregar a página. Para notificações com o app fechado é preciso a Push API e um servidor; aqui testamos notificações locais exibidas pelo Service Worker.</p>
+      <pre class="codigo"><code>const permissao = await Notification.requestPermission(); // 'granted' | 'denied' | 'default'
+if (permissao === 'granted') {
+  const reg = await navigator.serviceWorker.ready;
+  reg.showNotification('Olá!', { body: 'Notificação via Service Worker' });
+}</code></pre>
+
+      <div id="lab-nativo" class="lab">
+        <h3>🧪 Laboratório: Compartilhar e Notificações</h3>
+
+        <h4>Armazenamento: seu apelido</h4>
+        <div class="form-linha">
+          <label>Apelido (salvo em localStorage)
+            <input id="storage-input" type="text" maxlength="30" placeholder="Ex.: Ana">
+          </label>
+          <button id="btn-storage-salvar" class="btn btn--secundario">Salvar</button>
+        </div>
+        <p id="storage-saida" class="lab__saida" aria-live="polite"></p>
+
+        <h4>Compartilhamento nativo</h4>
+        <div class="lab__acoes">
+          <button id="btn-compartilhar-app" class="btn btn--primario">Compartilhar o PWA Brasil</button>
+          <button id="btn-compartilhar-aula" class="btn btn--secundario">Compartilhar esta aula</button>
+        </div>
+        <p id="share-status" class="lab__saida" aria-live="polite"></p>
+
+        <h4>Permissão de notificações</h4>
+        <div class="lab__acoes">
+          <button id="btn-notif" class="btn btn--primario">Pedir permissão</button>
+          <button id="btn-notif-teste" class="btn btn--secundario" disabled>Enviar notificação de teste</button>
+        </div>
+        <p id="notif-status" class="lab__saida" aria-live="polite"></p>
+      </div>
+
+      <footer class="modulo__rodape">
+        <a class="btn btn--fantasma" href="#modulo-3" data-nav="modulo-3">← Anterior</a>
+        <button class="btn btn--sucesso btn-concluir" data-modulo="modulo-4">Marcar módulo como concluído</button>
+        <a class="btn btn--primario" href="#modulo-5" data-nav="modulo-5">Próximo: Auditoria e Deploy →</a>
+      </footer>
+    </section>
+
+    <!-- ================= MÓDULO 5 ================= -->
+    <section id="modulo-5" class="modulo" data-titulo="Módulo 5 — Auditoria, Atualização e Deploy" hidden>
+      <header class="modulo__cab">
+        <p class="selo">Módulo 5 de 5</p>
+        <h2>Auditoria, Ciclo de Atualização e Deploy</h2>
+        <p class="lead">Um PWA de verdade precisa ser medido, atualizado com segurança e publicado em HTTPS.</p>
+      </header>
+
+      <h3>Auditando com o Lighthouse</h3>
+      <ol class="passos">
+        <li>Abra o app no Chrome e pressione <kbd>F12</kbd> (DevTools).</li>
+        <li>Vá à aba <strong>Lighthouse</strong> e marque Desempenho, Acessibilidade, Boas práticas e SEO.</li>
+        <li>Clique em <strong>Analisar</strong> e leia as recomendações.</li>
+        <li>Na aba <strong>Application</strong>, confira Manifest, Service Workers e Cache Storage.</li>
+      </ol>
+      <p class="nota">Versões recentes do Lighthouse removeram a categoria "PWA" dedicada; os mesmos requisitos aparecem na aba Application e nas verificações de instalabilidade do DevTools.</p>
+
+      <h3>Atualização de versão</h3>
+      <p>Quando você altera o <code>sw.js</code>, o navegador baixa a nova versão, instala-a e a deixa em <em>waiting</em>. A página detecta isso e mostra o banner; ao clicar em "Atualizar", enviamos uma mensagem para o SW chamar <code>skipWaiting()</code>, e então recarregamos.</p>
+      <pre class="codigo"><code>// --- app.js (página) ---
+reg.addEventListener('updatefound', () =&gt; {
+  const novo = reg.installing;
+  novo.addEventListener('statechange', () =&gt; {
+    // "installed" + já existe controller = há uma versão nova esperando
+    if (novo.state === 'installed' &amp;&amp; navigator.serviceWorker.controller) {
+      mostrarBanner();
+    }
+  });
+});
+btnAtualizar.onclick = () =&gt; reg.waiting.postMessage({ tipo: 'PULAR_ESPERA' });
+navigator.serviceWorker.addEventListener('controllerchange', () =&gt; location.reload());
+
+// --- sw.js ---
+self.addEventListener('message', (e) =&gt; {
+  if (e.data.tipo === 'PULAR_ESPERA') self.skipWaiting();
+});</code></pre>
+
+      <div id="lab-atualizacao" class="lab">
+        <h3>🧪 Laboratório: Ciclo de atualização</h3>
+        <div class="lab__acoes">
+          <button id="btn-checar-atualizacao" class="btn btn--primario">Procurar nova versão</button>
+        </div>
+        <p id="atualizacao-status" class="lab__saida" aria-live="polite">Versão do cache ativo: <strong id="versao-sw">—</strong></p>
+        <p class="nota">Para ver o banner: altere a constante <code>VERSAO</code> em <code>sw.js</code>, salve, publique e clique em "Procurar nova versão".</p>
+      </div>
+
+      <h3>Publicando no GitHub Pages (HTTPS grátis)</h3>
+      <ol class="passos">
+        <li>Crie um repositório e envie todos os arquivos (<code>index.html</code>, <code>sw.js</code>, etc.) na raiz.</li>
+        <li>Em <strong>Settings → Pages</strong>, escolha a branch <code>main</code> e a pasta <code>/ (root)</code>.</li>
+        <li>Aguarde o deploy; o app ficará em <code>https://usuario.github.io/repositorio/</code>.</li>
+        <li>Como todos os caminhos são <strong>relativos</strong>, o app funciona dentro da subpasta do repositório.</li>
+      </ol>
+      <p>Para testar localmente: <code>python3 -m http.server 8080</code> e abra <code>http://localhost:8080</code>. Abrir o arquivo com <code>file://</code> <strong>não</strong> ativa o Service Worker.</p>
+
+      <div class="parabens" id="parabens" hidden>
+        <h3>🎉 Parabéns!</h3>
+        <p>Você concluiu os 5 módulos. Agora publique o seu próprio PWA!</p>
+      </div>
+
+      <footer class="modulo__rodape">
+        <a class="btn btn--fantasma" href="#modulo-4" data-nav="modulo-4">← Anterior</a>
+        <button class="btn btn--sucesso btn-concluir" data-modulo="modulo-5">Marcar módulo como concluído</button>
+        <span></span>
+      </footer>
+    </section>
+
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
