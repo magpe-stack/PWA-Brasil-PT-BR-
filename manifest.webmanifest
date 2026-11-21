@@ -2,7 +2,7 @@
   "id": "./",
   "name": "PWA Brasil (PT-BR)",
   "short_name": "PWA Brasil",
-  "description": "Aprenda a criar e publicar PWAs na prática, com laboratórios ao vivo. O app ensina o que ele mesmo implementa.",
+  "description": "Curso em português, do zero, para aprender a criar e publicar PWAs, com laboratórios ao vivo. O app ensina o que ele mesmo implementa.",
   "lang": "pt-BR",
   "dir": "ltr",
   "start_url": "./index.html?source=pwa",
@@ -18,7 +18,7 @@
     { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ],
   "shortcuts": [
-    { "name": "Inspetor de Cache", "short_name": "Cache", "url": "./index.html?modulo=modulo-3", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
-    { "name": "Instalação do PWA", "short_name": "Instalar", "url": "./index.html?modulo=modulo-2", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] }
+    { "name": "Inspetor de Cache", "short_name": "Cache", "url": "./index.html?modulo=modulo-4", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Instalação do PWA", "short_name": "Instalar", "url": "./index.html?modulo=modulo-3", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] }
   ]
 }

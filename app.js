@@ -157,9 +157,10 @@ function mostrarPelaHash(primeiraVez = false) {
 
   if (!primeiraVez && alvo === modulo) $('#conteudo').focus({ preventScroll: true });
 
-  // Ao abrir o módulo 3 ou 5, atualiza dados ao vivo.
-  if (modulo.id === 'modulo-3') { atualizarInfoSW(); listarCache(); }
-  if (modulo.id === 'modulo-5') pedirVersaoAoSW();
+  // Ao abrir um módulo que tem laboratório com dados ao vivo, atualiza esses dados.
+  // (Procuramos pelo laboratório, e não pelo número do módulo, para não quebrar se a ordem mudar.)
+  if (modulo.querySelector('#lab-cache')) { atualizarInfoSW(); listarCache(); }
+  if (modulo.querySelector('#lab-atualizacao')) pedirVersaoAoSW();
 }
 mostrarPelaHash.padrao = () => { history.replaceState(null, '', '#modulo-1'); mostrarPelaHash(true); };
 
@@ -176,8 +177,11 @@ function iniciarNavegacao() {
 /* ---------------------------------------------------------------------
  * 5) PROGRESSO DO ALUNO (localStorage)
  * ------------------------------------------------------------------- */
-const TOTAL_MODULOS = 5;
-let concluidos = Armazenamento.ler('progresso', []);
+// O total vem do HTML: cada módulo tem um botão "concluir". Assim, ao criar
+// um módulo novo, basta copiar o botão; não é preciso mexer neste número.
+const TOTAL_MODULOS = $$('.btn-concluir').length;
+// Chave "progresso-v2": o curso foi reorganizado em 7 módulos e a numeração antiga não vale mais.
+let concluidos = Armazenamento.ler('progresso-v2', []).filter((id) => document.getElementById(id));
 
 function desenharProgresso() {
   const n = concluidos.length;
@@ -203,7 +207,7 @@ function iniciarProgresso() {
     b.addEventListener('click', () => {
       const id = b.dataset.modulo;
       concluidos = concluidos.includes(id) ? concluidos.filter((m) => m !== id) : [...concluidos, id];
-      Armazenamento.gravar('progresso', concluidos);
+      Armazenamento.gravar('progresso-v2', concluidos);
       desenharProgresso();
       if (concluidos.includes(id)) toast('Módulo concluído! 🎉');
     });
@@ -453,14 +457,14 @@ function iniciarInstalacao() {
   if (jaInstalado()) {
     dizer(status, 'Você já está usando o PWA Brasil instalado. 🎉', 'ok');
   } else {
-    dizer(status, 'Aguardando o navegador sinalizar que o app é instalável…');
-    // Se o evento não chegar, explicamos os motivos mais comuns.
+    dizer(status, 'Aguardando o navegador avisar que o app pode ser instalado…');
+    // Se o aviso não chegar, explicamos os motivos mais comuns em linguagem simples.
     setTimeout(() => {
       if (eventoInstalacao || jaInstalado()) return;
       const ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
       dizer(status, ios
-        ? 'No iOS, use Compartilhar → Adicionar à Tela de Início (o Safari não dispara beforeinstallprompt).'
-        : 'O evento ainda não chegou. Possíveis causas: app já instalado, Service Worker ainda ativando (recarregue), navegador sem suporte (ex.: Firefox desktop) ou critérios de instalabilidade não cumpridos.');
+        ? 'No iPhone/iPad não existe botão automático. Toque em Compartilhar e depois em "Adicionar à Tela de Início".'
+        : 'O botão não foi liberado. Os motivos mais comuns: o app já está instalado; o "porteiro" (Service Worker) ainda está começando, então recarregue a página; ou o seu navegador não oferece esse recurso (por exemplo, o Firefox no computador). Você ainda pode instalar pelo menu do navegador.');
     }, 4000);
   }
 
@@ -588,7 +592,7 @@ async function limparCache() {
 async function testarEstrategia() {
   const saida = $('#lab-resultado');
   if (!('serviceWorker' in navigator) || !navigator.serviceWorker.controller) {
-    saida.textContent = 'O Service Worker ainda não controla esta página. Recarregue uma vez e tente de novo.';
+    saida.textContent = 'O Service Worker (o "porteiro") ainda não está controlando esta página. Isso é normal na primeira visita: recarregue a página uma vez e tente de novo.';
     return;
   }
   const estrategia = $('#lab-estrategia').value;
@@ -713,6 +717,76 @@ function iniciarRecursosNativos() {
 }
 
 /* ---------------------------------------------------------------------
+ * 11b) MÓDULO 1 — EDITOR DE HTML AO VIVO E "ESPIAR O CÓDIGO"
+ * ------------------------------------------------------------------- */
+function iniciarLaboratoriosHTML() {
+  const editor = $('#editor-html');
+  const previa = $('#preview-html');
+
+  const EXEMPLO = [
+    '<h1 style="color: #0b57d0;">Olá, mundo!</h1>',
+    '<p>Edite este texto e veja o resultado ao lado.</p>',
+    '<button>Um botão</button>',
+    '<ul>',
+    '  <li>Item 1</li>',
+    '  <li>Item 2</li>',
+    '</ul>'
+  ].join('\n');
+
+  // O resultado aparece dentro de um <iframe> com sandbox="" (sem permissões):
+  // ele mostra HTML e CSS, mas não executa scripts. Assim é seguro experimentar.
+  const desenhar = () => {
+    previa.srcdoc =
+      '<!doctype html><html lang="pt-BR"><meta charset="utf-8">' +
+      '<style>body{font-family:system-ui,sans-serif;padding:12px;background:#fff;color:#111}</style>' +
+      '<body>' + editor.value + '</body></html>';
+  };
+
+  editor.value = EXEMPLO;
+  desenhar();
+  editor.addEventListener('input', desenhar);
+  $('#btn-resetar-html').addEventListener('click', () => { editor.value = EXEMPLO; desenhar(); });
+
+  // Mostra o começo do index.html real, buscado com fetch().
+  $('#btn-ver-fonte').addEventListener('click', async () => {
+    const saida = $('#fonte-saida');
+    saida.textContent = 'Buscando o arquivo index.html…';
+    try {
+      const resp = await fetch('./index.html');
+      if (!resp.ok) throw new Error('HTTP ' + resp.status);
+      const linhas = (await resp.text()).split('\n');
+      const limite = 45;
+      saida.textContent = linhas.slice(0, limite).join('\n') +
+        `\n\n… (mostrando ${limite} de ${linhas.length} linhas)`;
+    } catch (erro) {
+      saida.textContent = 'Não foi possível buscar o arquivo: ' + erro.message;
+    }
+  });
+}
+
+/* Coloca um botão "Copiar" em cada bloco de código de exemplo. */
+function iniciarBotoesCopiar() {
+  $$('pre.codigo:not(.codigo--saida)').forEach((pre) => {
+    pre.classList.add('codigo--copiavel');
+    const botao = document.createElement('button');
+    botao.type = 'button';
+    botao.className = 'copiar';
+    botao.textContent = 'Copiar';
+    botao.setAttribute('aria-label', 'Copiar este código');
+    botao.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText($('code', pre).textContent);
+        botao.textContent = 'Copiado ✔';
+      } catch (e) {
+        botao.textContent = 'Selecione e use Ctrl+C';
+      }
+      setTimeout(() => { botao.textContent = 'Copiar'; }, 2000);
+    });
+    pre.append(botao);
+  });
+}
+
+/* ---------------------------------------------------------------------
  * 12) INICIALIZAÇÃO
  * ------------------------------------------------------------------- */
 document.addEventListener('DOMContentLoaded', () => {
@@ -726,6 +800,8 @@ document.addEventListener('DOMContentLoaded', () => {
   iniciarInstalacao();
   iniciarInspetorCache();
   iniciarRecursosNativos();
+  iniciarLaboratoriosHTML();
+  iniciarBotoesCopiar();
   iniciarNavegacao();
   iniciarServiceWorker();
 });

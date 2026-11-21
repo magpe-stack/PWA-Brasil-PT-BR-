@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>PWA Brasil (PT-BR) — Aprenda PWA na prática</title>
-  <meta name="description" content="PWA educacional em português que ensina a criar e publicar PWAs, com laboratórios ao vivo.">
+  <title>PWA Brasil (PT-BR) — Aprenda PWA do zero</title>
+  <meta name="description" content="Curso em português, do zero, que ensina o que é um PWA e como criar e publicar o seu, com laboratórios ao vivo.">
   <meta name="theme-color" content="#0b57d0">
 
-  <!-- Liga a página ao Web App Manifest (Módulo 2) -->
+  <!-- Liga a página ao Web App Manifest (Módulo 3) -->
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -43,7 +43,7 @@
       </svg>
     </div>
     <h1 class="splash__titulo">PWA Brasil (PT-BR)</h1>
-    <p class="splash__sub">Aprenda PWA na prática</p>
+    <p class="splash__sub">Aprenda PWA do zero</p>
     <div class="splash__barra" aria-hidden="true"><span></span></div>
   </div>
 
@@ -56,10 +56,10 @@
 
     <!-- Indicadores em tempo real: rede + Service Worker -->
     <div class="status" aria-live="polite">
-      <span id="badge-rede" class="badge badge--ok" title="Estado da rede (navigator.onLine)">
+      <span id="badge-rede" class="badge badge--ok" title="Mostra se você está com internet (Online) ou sem internet (Offline)">
         <i class="ponto"></i><span>Online</span>
       </span>
-      <span id="badge-sw" class="badge badge--neutro" title="Estado do Service Worker">
+      <span id="badge-sw" class="badge badge--neutro" title="Estado do Service Worker, o 'porteiro' que faz o app funcionar sem internet">
         <i class="ponto"></i><span>SW: verificando…</span>
       </span>
     </div>
@@ -69,9 +69,9 @@
     </button>
   </header>
 
-  <!-- Banner "Nova versão disponível" (Módulo 5) -->
+  <!-- Banner "Nova versão disponível" (Módulo 6) -->
   <div id="banner-atualizacao" class="banner" role="alert" hidden>
-    <span><strong>Nova versão disponível.</strong> Atualize para receber o conteúdo mais recente.</span>
+    <span><strong>Nova versão disponível.</strong> Clique em "Atualizar agora" para receber o conteúdo mais recente.</span>
     <span class="banner__acoes">
       <button id="btn-atualizar" class="btn btn--primario btn--pequeno">Atualizar agora</button>
       <button id="btn-dispensar" class="btn btn--fantasma btn--pequeno">Depois</button>
@@ -88,25 +88,33 @@
 
     <div class="progresso" aria-label="Seu progresso">
       <div class="progresso__trilho"><div id="progresso-barra" class="progresso__barra" style="width:0%"></div></div>
-      <small id="progresso-texto">0 de 5 módulos concluídos</small>
+      <small id="progresso-texto">0 módulos concluídos</small>
     </div>
 
     <nav>
       <p class="drawer__titulo">Módulos</p>
       <ul class="menu">
-        <li><a href="#modulo-1" data-modulo="modulo-1"><span class="menu__num">1</span> Fundamentos do PWA <em class="menu__ok" aria-hidden="true"></em></a></li>
-        <li><a href="#modulo-2" data-modulo="modulo-2"><span class="menu__num">2</span> Manifest e Instalação <em class="menu__ok" aria-hidden="true"></em></a></li>
-        <li><a href="#modulo-3" data-modulo="modulo-3"><span class="menu__num">3</span> Service Workers e Cache <em class="menu__ok" aria-hidden="true"></em></a></li>
-        <li><a href="#modulo-4" data-modulo="modulo-4"><span class="menu__num">4</span> Recursos Nativos <em class="menu__ok" aria-hidden="true"></em></a></li>
-        <li><a href="#modulo-5" data-modulo="modulo-5"><span class="menu__num">5</span> Auditoria e Deploy <em class="menu__ok" aria-hidden="true"></em></a></li>
+        <li><a href="#modulo-1" data-modulo="modulo-1"><span class="menu__num">1</span> Como a web funciona <em class="menu__ok" aria-hidden="true"></em></a></li>
+        <li><a href="#modulo-2" data-modulo="modulo-2"><span class="menu__num">2</span> O que é um PWA <em class="menu__ok" aria-hidden="true"></em></a></li>
+        <li><a href="#modulo-3" data-modulo="modulo-3"><span class="menu__num">3</span> Manifest e instalação <em class="menu__ok" aria-hidden="true"></em></a></li>
+        <li><a href="#modulo-4" data-modulo="modulo-4"><span class="menu__num">4</span> Service Worker e cache <em class="menu__ok" aria-hidden="true"></em></a></li>
+        <li><a href="#modulo-5" data-modulo="modulo-5"><span class="menu__num">5</span> Recursos do aparelho <em class="menu__ok" aria-hidden="true"></em></a></li>
+        <li><a href="#modulo-6" data-modulo="modulo-6"><span class="menu__num">6</span> Testar, atualizar e publicar <em class="menu__ok" aria-hidden="true"></em></a></li>
+        <li><a href="#modulo-7" data-modulo="modulo-7"><span class="menu__num">7</span> Mão na massa: seu PWA <em class="menu__ok" aria-hidden="true"></em></a></li>
       </ul>
       <p class="drawer__titulo">Laboratórios ao vivo</p>
       <ul class="menu menu--labs">
-        <li><a href="#lab-checklist" data-modulo="modulo-1">🧪 Checklist de prontidão</a></li>
-        <li><a href="#lab-instalacao" data-modulo="modulo-2">🧪 Instalar + Inspetor de Manifest</a></li>
-        <li><a href="#lab-cache" data-modulo="modulo-3">🧪 Inspetor de Cache</a></li>
-        <li><a href="#lab-nativo" data-modulo="modulo-4">🧪 Compartilhar e Notificações</a></li>
-        <li><a href="#lab-atualizacao" data-modulo="modulo-5">🧪 Ciclo de atualização</a></li>
+        <li><a href="#lab-html" data-modulo="modulo-1">🧪 Editor de HTML ao vivo</a></li>
+        <li><a href="#lab-fonte" data-modulo="modulo-1">🧪 Espie o código deste app</a></li>
+        <li><a href="#lab-checklist" data-modulo="modulo-2">🧪 Checklist de prontidão</a></li>
+        <li><a href="#lab-instalacao" data-modulo="modulo-3">🧪 Instalar + Inspetor de Manifest</a></li>
+        <li><a href="#lab-cache" data-modulo="modulo-4">🧪 Inspetor de Cache</a></li>
+        <li><a href="#lab-nativo" data-modulo="modulo-5">🧪 Compartilhar e Notificações</a></li>
+        <li><a href="#lab-atualizacao" data-modulo="modulo-6">🧪 Ciclo de atualização</a></li>
+      </ul>
+      <p class="drawer__titulo">Apoio</p>
+      <ul class="menu">
+        <li><a href="#glossario" data-modulo="glossario"><span class="menu__num" aria-hidden="true">Aa</span> Glossário</a></li>
       </ul>
     </nav>
   </aside>
@@ -115,44 +123,248 @@
   <main id="conteudo" class="conteudo" tabindex="-1">
 
     <!-- ================= MÓDULO 1 ================= -->
-    <section id="modulo-1" class="modulo" data-titulo="Módulo 1 — Fundamentos do PWA">
+    <section id="modulo-1" class="modulo" data-titulo="Módulo 1 — Como a web funciona">
       <header class="modulo__cab">
-        <p class="selo">Módulo 1 de 5</p>
-        <h2>Fundamentos do PWA</h2>
-        <p class="lead">Um Progressive Web App é um site que se comporta como aplicativo: instalável, rápido, confiável e capaz de funcionar sem internet.</p>
+        <p class="selo">Módulo 1 de 7</p>
+        <h2>Como a web funciona</h2>
+        <p class="lead">Antes de falar de PWA, vamos entender o que acontece quando você abre um site. Você não precisa saber nada de programação para começar: este curso parte do zero.</p>
       </header>
 
-      <h3>O que é um PWA?</h3>
-      <p>Um PWA é construído com tecnologias web comuns (HTML, CSS e JavaScript), mas adiciona três peças que mudam o jogo: <strong>HTTPS</strong>, um <strong>Web App Manifest</strong> e um <strong>Service Worker</strong>. Juntas, elas permitem instalar o site na tela inicial e usá-lo offline.</p>
+      <div class="caixa caixa--objetivos">
+        <strong>O que você vai aprender neste módulo</strong>
+        <ul>
+          <li>A diferença entre internet e web.</li>
+          <li>O que são navegador, servidor e endereço de site.</li>
+          <li>O que são HTML, CSS e JavaScript, e para que cada um serve.</li>
+          <li>Como espiar o código de qualquer site.</li>
+        </ul>
+      </div>
 
-      <h3>PWA × App nativo × Site tradicional</h3>
+      <h3>Como usar este curso</h3>
+      <p>O curso tem 7 módulos, que você segue em ordem pelo menu (o botão com três tracinhos, no canto superior esquerdo). Cada módulo explica um assunto com exemplos simples. Alguns têm um <strong>laboratório ao vivo</strong>, onde você mexe em coisas de verdade, dentro deste próprio aplicativo. Quando aparecer uma palavra difícil, explicamos na hora, e há um <a href="#glossario">glossário</a> no fim do menu.</p>
+      <p>Você vai encontrar estas caixinhas pelo caminho:</p>
+      <div class="caixa caixa--analogia"><strong>🏠 Analogia</strong>Compara uma ideia técnica com algo do dia a dia.</div>
+      <div class="caixa caixa--dica"><strong>💡 Dica</strong>Um atalho ou um jeito mais fácil de fazer algo.</div>
+      <div class="caixa caixa--atencao"><strong>⚠️ Atenção</strong>Um erro comum, para você não cair nele.</div>
+
+      <h3>Internet e web não são a mesma coisa</h3>
+      <p>As pessoas usam as duas palavras como se fossem iguais, mas são diferentes:</p>
+      <ul>
+        <li><strong>Internet</strong> é a rede gigante que liga milhões de computadores e celulares do mundo todo, por cabos, antenas e satélites. Pense nela como as <em>estradas</em>.</li>
+        <li><strong>Web</strong> (ou "WWW") é um dos serviços que andam por essas estradas: o conjunto de páginas e aplicativos que você abre no navegador, ligados por links. Pense nela como os <em>veículos</em> que circulam pelas estradas.</li>
+      </ul>
+      <p>O WhatsApp e o e-mail também usam a internet, mas não são "a web".</p>
+
+      <h3>Navegador, site e servidor</h3>
+      <p>Quando você digita um endereço e aperta Enter, acontece uma conversa entre dois computadores:</p>
+      <ul class="lista-cards">
+        <li><strong>Navegador</strong>O programa que você usa para ver sites, como Chrome, Edge, Firefox ou Safari. Ele é o "cliente" que faz os pedidos.</li>
+        <li><strong>Servidor</strong>Um computador sempre ligado, em algum lugar do mundo, que guarda os arquivos do site e os entrega a quem pedir.</li>
+        <li><strong>Site</strong>O conjunto de arquivos (textos, imagens, estilos, códigos) que o servidor entrega e o navegador monta na sua tela.</li>
+      </ul>
+      <div class="caixa caixa--analogia">
+        <strong>🏠 Analogia: o restaurante</strong>
+        Você é o cliente (<em>navegador</em>). A cozinha é o <em>servidor</em>. O garçom que leva o pedido e traz a comida é a <em>internet</em>. O pedido é a <em>requisição</em>, e o prato que chega é a <em>resposta</em>: os arquivos do site. Guarde essa história, porque vamos usá-la de novo no módulo do Service Worker.
+      </div>
+
+      <h3>O endereço de um site (URL)</h3>
+      <p>O endereço completo de uma página se chama <strong>URL</strong>. Veja as partes de um exemplo:</p>
+      <pre class="codigo"><code>https://pwabrasil.exemplo.com.br/aula/modulo-1.html
+
+https://                   → o "protocolo": a forma segura de conversar
+pwabrasil.exemplo.com.br   → o domínio: o "nome" do servidor
+/aula/modulo-1.html        → o caminho: qual arquivo você quer, dentro do site</code></pre>
+
+      <h3>HTTP e HTTPS: o cadeado</h3>
+      <p><strong>HTTP</strong> é a "língua" que navegador e servidor falam entre si. O <strong>HTTPS</strong> é a mesma língua, mas com a conversa <em>embaralhada</em> (criptografada), de modo que ninguém no meio do caminho consegue ler o que você envia ou recebe, como senhas e dados de cartão. É por isso que aparece um cadeado ao lado do endereço.</p>
+      <div class="caixa caixa--atencao">
+        <strong>⚠️ Por que isso importa para PWA?</strong>
+        Os recursos mais poderosos de um PWA só funcionam em sites com HTTPS. A única exceção é o endereço <code>localhost</code>, que significa "o meu próprio computador" e serve para testar enquanto você desenvolve.
+      </div>
+
+      <h3>Um site é feito de arquivos</h3>
+      <p>Um <strong>arquivo</strong> é um conteúdo guardado com um nome, como uma foto ou um documento. Uma <strong>pasta</strong> agrupa arquivos. O final do nome, depois do ponto, é a <strong>extensão</strong>, e ela diz que tipo de arquivo é. Estes são os que vamos usar:</p>
+      <div class="tabela-wrap">
+        <table>
+          <thead><tr><th>Extensão</th><th>O que é</th><th>Papel no site</th></tr></thead>
+          <tbody>
+            <tr><td><code>.html</code></td><td>Texto com marcações</td><td>O conteúdo e a estrutura da página</td></tr>
+            <tr><td><code>.css</code></td><td>Texto com regras de aparência</td><td>Cores, tamanhos e posições</td></tr>
+            <tr><td><code>.js</code></td><td>Texto com instruções</td><td>O comportamento: o que acontece ao clicar</td></tr>
+            <tr><td><code>.json</code> / <code>.webmanifest</code></td><td>Texto com dados organizados</td><td>Informações de configuração (veremos no Módulo 3)</td></tr>
+            <tr><td><code>.png</code> / <code>.svg</code></td><td>Imagem</td><td>Logotipos e ícones</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Todos os arquivos de código são <strong>texto puro</strong>. Para escrevê-los você só precisa de um <em>editor de texto</em>. O Bloco de Notas já serve, e o <strong>Visual Studio Code</strong> (gratuito) deixa tudo mais confortável, com cores e ajuda ao digitar.</p>
+
+      <h3>As três linguagens da web</h3>
+      <p>Todo site é construído com três linguagens que trabalham juntas.</p>
+      <div class="caixa caixa--analogia">
+        <strong>🏠 Analogia: a construção de uma casa</strong>
+        O <strong>HTML</strong> é a estrutura: paredes, portas e cômodos. O <strong>CSS</strong> é o acabamento: a cor da tinta, o piso, o tamanho das janelas. O <strong>JavaScript</strong> é a parte elétrica e hidráulica: faz a luz acender quando você aperta o interruptor.
+      </div>
+
+      <h4>1) HTML: a estrutura</h4>
+      <p>O HTML não é bem uma "linguagem de programação": é uma <strong>linguagem de marcação</strong>. Você <em>marca</em> cada pedaço do texto para dizer o que ele é (título, parágrafo, botão). Essas marcações se chamam <strong>tags</strong> e vêm entre os sinais <code>&lt;</code> e <code>&gt;</code>. Quase sempre há uma tag que abre e outra que fecha (com uma barra).</p>
+      <pre class="codigo"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-BR"&gt;               &lt;!-- tudo fica dentro desta tag; lang = idioma da página --&gt;
+  &lt;head&gt;                           &lt;!-- "bastidores": informações que não aparecem na tela --&gt;
+    &lt;meta charset="utf-8"&gt;         &lt;!-- permite usar acentos: ç, ã, é --&gt;
+    &lt;title&gt;Minha página&lt;/title&gt;   &lt;!-- o texto que aparece na aba do navegador --&gt;
+  &lt;/head&gt;
+  &lt;body&gt;                           &lt;!-- tudo o que aparece na tela --&gt;
+    &lt;h1&gt;Olá, mundo!&lt;/h1&gt;          &lt;!-- h1 = título principal --&gt;
+    &lt;p&gt;Este é um parágrafo.&lt;/p&gt;    &lt;!-- p = parágrafo --&gt;
+    &lt;button&gt;Clique aqui&lt;/button&gt;  &lt;!-- botão --&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+      <p>Repare que as linhas entre <code>&lt;!--</code> e <code>--&gt;</code> são <strong>comentários</strong>: anotações para humanos, que o navegador ignora.</p>
+
+      <h4>2) CSS: a aparência</h4>
+      <p>O CSS é um conjunto de regras no formato "<em>escolha este elemento</em> e <em>mude estas características</em>".</p>
+      <pre class="codigo"><code>h1 {                      /* escolhe todos os títulos h1 */
+  color: darkblue;        /* a cor do texto vira azul-escuro */
+  font-size: 32px;        /* o tamanho da letra vira 32 pixels */
+}</code></pre>
+
+      <h4>3) JavaScript: o comportamento</h4>
+      <p>O JavaScript é uma <strong>linguagem de programação</strong>: você escreve instruções, e o navegador as executa na ordem.</p>
+      <pre class="codigo"><code>// "const" cria uma caixinha com nome, para guardar algo.
+// Aqui guardamos o botão da página na caixinha chamada "botao".
+const botao = document.querySelector('button');
+
+// "Quando alguém clicar no botão, faça o que está entre as chaves."
+botao.addEventListener('click', () =&gt; {
+  alert('Você clicou!');   // mostra um aviso na tela
+});</code></pre>
+
+      <div id="lab-html" class="lab">
+        <h3>🧪 Laboratório: Editor de HTML ao vivo</h3>
+        <p>À esquerda você escreve HTML. À direita vê o resultado, que muda enquanto você digita. Nada do que você escrever aqui é salvo ou enviado para a internet.</p>
+        <div class="editor-duplo">
+          <label class="editor-coluna">Seu HTML
+            <textarea id="editor-html" spellcheck="false" rows="10" autocapitalize="off" autocomplete="off"></textarea>
+          </label>
+          <div class="editor-coluna">
+            <span class="editor-rotulo">Resultado</span>
+            <iframe id="preview-html" title="Resultado do HTML que você escreveu" sandbox=""></iframe>
+          </div>
+        </div>
+        <div class="lab__acoes">
+          <button id="btn-resetar-html" class="btn btn--fantasma">Voltar ao exemplo inicial</button>
+        </div>
+        <p><strong>Desafios:</strong></p>
+        <ol class="passos">
+          <li>Troque "Olá, mundo!" pelo seu nome.</li>
+          <li>Mude a cor de <code>#0b57d0</code> para <code>red</code> (vermelho) ou <code>green</code> (verde).</li>
+          <li>Acrescente uma terceira linha, <code>&lt;li&gt;Item 3&lt;/li&gt;</code>, dentro da lista.</li>
+          <li>Apague de propósito um <code>&lt;/li&gt;</code> e veja como o navegador tenta se virar. Ele é tolerante, mas é melhor sempre fechar as tags.</li>
+        </ol>
+      </div>
+
+      <div id="lab-fonte" class="lab">
+        <h3>🧪 Laboratório: Espie o código deste app</h3>
+        <p>Todo site entrega o código a quem o visita; por isso é possível aprender olhando sites que você admira. Clique para ver o começo do arquivo <code>index.html</code> do app que você está usando agora:</p>
+        <div class="lab__acoes">
+          <button id="btn-ver-fonte" class="btn btn--primario">Mostrar o HTML deste app</button>
+        </div>
+        <pre id="fonte-saida" class="codigo codigo--saida" aria-live="polite">Clique no botão acima.</pre>
+        <div class="caixa caixa--dica">
+          <strong>💡 Dica: espiar qualquer site</strong>
+          No computador, clique com o botão direito na página e escolha <em>Inspecionar</em> (ou aperte <kbd>F12</kbd>). Abre-se o <strong>DevTools</strong>, o painel de ferramentas do navegador, que usaremos bastante. Para ver só o HTML original, aperte <kbd>Ctrl</kbd>+<kbd>U</kbd>.
+        </div>
+      </div>
+
+      <div class="caixa caixa--resumo">
+        <strong>Resumo do módulo</strong>
+        <ul>
+          <li>A internet é a rede; a web é o que circula nela.</li>
+          <li>O navegador pede, o servidor entrega arquivos, e o HTTPS protege a conversa.</li>
+          <li>HTML dá a estrutura, CSS dá a aparência e JavaScript dá o comportamento.</li>
+          <li>Um site é uma pasta de arquivos de texto, e você pode espiar o código de qualquer um.</li>
+        </ul>
+      </div>
+
+      <footer class="modulo__rodape">
+        <span></span>
+        <button class="btn btn--sucesso btn-concluir" data-modulo="modulo-1">Marcar módulo como concluído</button>
+        <a class="btn btn--primario" href="#modulo-2" data-nav="modulo-2">Próximo: O que é um PWA →</a>
+      </footer>
+    </section>
+
+    <!-- ================= MÓDULO 2 ================= -->
+    <section id="modulo-2" class="modulo" data-titulo="Módulo 2 — O que é um PWA" hidden>
+      <header class="modulo__cab">
+        <p class="selo">Módulo 2 de 7</p>
+        <h2>O que é um PWA</h2>
+        <p class="lead">Um PWA é um site comum que aprendeu três truques: ser instalado como aplicativo, funcionar sem internet e se comportar como app.</p>
+      </header>
+
+      <div class="caixa caixa--objetivos">
+        <strong>O que você vai aprender neste módulo</strong>
+        <ul>
+          <li>O problema que os PWAs resolvem.</li>
+          <li>O que significa a sigla PWA.</li>
+          <li>As três peças que todo PWA precisa ter.</li>
+          <li>Quando um PWA é a melhor escolha e quais são os seus limites.</li>
+        </ul>
+      </div>
+
+      <h3>O problema</h3>
+      <p>Imagine que você tem uma ideia de aplicativo. Há dois caminhos tradicionais:</p>
+      <ul>
+        <li><strong>Site comum:</strong> fácil de publicar e funciona em qualquer aparelho, mas não tem ícone na tela inicial, depende de internet e "parece" um site.</li>
+        <li><strong>Aplicativo nativo</strong> (da loja de aplicativos): tem ícone, funciona offline e usa recursos do aparelho, mas é preciso criar uma versão para cada sistema (Android, iPhone, computador), passar pela aprovação da loja e fazer o usuário baixar e atualizar.</li>
+      </ul>
+      <p>O PWA nasceu para dar um meio-termo: <strong>um único código, feito com as tecnologias do Módulo 1, que o usuário pode instalar e usar como aplicativo</strong>.</p>
+
+      <h3>O que significa PWA?</h3>
+      <p><strong>PWA</strong> é a sigla de <em>Progressive Web App</em>, em português, <strong>Aplicativo Web Progressivo</strong>.</p>
+      <ul>
+        <li><strong>Web App:</strong> é feito com tecnologias da web (HTML, CSS e JavaScript).</li>
+        <li><strong>Progressivo:</strong> funciona em qualquer navegador, e quanto mais moderno o aparelho, mais recursos ele ganha. Ninguém fica de fora.</li>
+      </ul>
+
+      <h3>As três peças de um PWA</h3>
+      <p>Para virar PWA, um site precisa de três coisas:</p>
+      <ul class="lista-cards">
+        <li><strong>1. HTTPS</strong>A conexão segura, com cadeado. Sem ela, o navegador não libera os recursos de PWA.</li>
+        <li><strong>2. Manifest</strong>Um arquivo que descreve o app: nome, ícone, cores e como ele deve abrir. É a "ficha de cadastro".</li>
+        <li><strong>3. Service Worker</strong>Um script que fica entre o app e a internet e decide o que guardar para usar offline. É o "porteiro".</li>
+      </ul>
+      <div class="caixa caixa--analogia">
+        <strong>🏠 Analogia: abrir uma lojinha</strong>
+        O <strong>HTTPS</strong> é a porta com fechadura, que dá segurança. O <strong>manifest</strong> é a placa e o cartão de visita, que dizem o nome e a cara da loja. O <strong>Service Worker</strong> é o gerente do estoque, que guarda mercadoria nos fundos para que a loja continue vendendo mesmo se o fornecedor atrasar.
+      </div>
+
+      <h3>PWA × site tradicional × app nativo</h3>
       <div class="tabela-wrap">
         <table>
           <thead><tr><th>Critério</th><th>Site tradicional</th><th>PWA</th><th>App nativo</th></tr></thead>
           <tbody>
-            <tr><td>Instalável</td><td>Não</td><td>Sim (sem loja)</td><td>Sim (via loja)</td></tr>
-            <tr><td>Funciona offline</td><td>Raramente</td><td>Sim</td><td>Sim</td></tr>
-            <tr><td>Atualização</td><td>Imediata</td><td>Automática, ao abrir</td><td>Depende da loja/usuário</td></tr>
-            <tr><td>Base de código</td><td>Web</td><td>Web (única para todas as plataformas)</td><td>Uma por plataforma</td></tr>
-            <tr><td>Acesso a hardware</td><td>Limitado</td><td>Bom e crescente</td><td>Total</td></tr>
-            <tr><td>Peso de instalação</td><td>Nenhum</td><td>Muito baixo</td><td>Alto</td></tr>
+            <tr><td>Ícone na tela inicial</td><td>Não</td><td>Sim, sem passar por loja</td><td>Sim, via loja</td></tr>
+            <tr><td>Funciona sem internet</td><td>Quase nunca</td><td>Sim</td><td>Sim</td></tr>
+            <tr><td>Como atualiza</td><td>Na hora</td><td>Sozinho, ao abrir</td><td>Depende da loja e do usuário</td></tr>
+            <tr><td>Código</td><td>Web</td><td>Web, um só para todos os aparelhos</td><td>Um para cada sistema</td></tr>
+            <tr><td>Acesso a recursos do aparelho</td><td>Pouco</td><td>Bom e crescendo</td><td>Total</td></tr>
+            <tr><td>Espaço ocupado</td><td>Nenhum</td><td>Muito pouco</td><td>Alto</td></tr>
           </tbody>
         </table>
       </div>
 
-      <h3>As três peças</h3>
-      <ul class="lista-cards">
-        <li><strong>HTTPS</strong>Service Workers só funcionam em contexto seguro (exceção: <code>localhost</code> para desenvolvimento).</li>
-        <li><strong>Manifest</strong>Um JSON que descreve nome, ícones, cores e modo de exibição do app.</li>
-        <li><strong>Service Worker</strong>Um script que fica entre a página e a rede e decide o que vem do cache.</li>
-      </ul>
+      <div class="caixa caixa--atencao">
+        <strong>⚠️ Limites (é importante saber)</strong>
+        Os PWAs não fazem tudo: o iPhone aceita menos recursos do que o Android, e alguns acessos ao hardware (como certos sensores e funções profundas do sistema) ainda são exclusivos de apps nativos. Para a maioria dos serviços do dia a dia, como cursos, listas, agendas e lojas, o PWA é mais que suficiente.
+      </div>
 
-      <h3>Esqueleto mínimo de um PWA</h3>
-      <pre class="codigo"><code>&lt;!-- 1) Liga o manifest --&gt;
+      <h3>O esqueleto mínimo de um PWA</h3>
+      <p>Só para você ver como é pouco, estas são as duas linhas que "ligam" as peças à página. Nos próximos módulos você entenderá cada uma:</p>
+      <pre class="codigo"><code>&lt;!-- 1) Aponta para a "ficha de cadastro" do app (manifest) --&gt;
 &lt;link rel="manifest" href="manifest.webmanifest"&gt;
 
 &lt;script&gt;
-  // 2) Registra o Service Worker (só se o navegador suportar)
+  // 2) Contrata o "porteiro" (Service Worker), se o navegador souber trabalhar com ele
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./sw.js');
   }
@@ -160,174 +372,293 @@
 
       <div id="lab-checklist" class="lab">
         <h3>🧪 Laboratório: Checklist de prontidão PWA</h3>
-        <p>Marque manualmente os itens que você já cumpriu <em>ou</em> clique em <strong>Verificar este app</strong> para que o PWA Brasil se auto-inspecione usando APIs reais do navegador.</p>
+        <p>Esta lista mostra o que um PWA bem-feito precisa ter. Você pode <strong>marcar à mão</strong> o que já cumpriu no seu projeto <em>ou</em> clicar em <strong>Verificar este app</strong>: o PWA Brasil se examina sozinho, usando recursos reais do navegador, e mostra um ✔ ou ✘ ao lado de cada item.</p>
         <ul id="checklist" class="checklist">
-          <li><label><input type="checkbox" data-item="https"> Servido via HTTPS (ou localhost)</label><span class="auto" data-auto="https"></span></li>
-          <li><label><input type="checkbox" data-item="manifest"> Possui &lt;link rel="manifest"&gt; válido</label><span class="auto" data-auto="manifest"></span></li>
-          <li><label><input type="checkbox" data-item="sw"> Service Worker registrado e controlando a página</label><span class="auto" data-auto="sw"></span></li>
-          <li><label><input type="checkbox" data-item="icones"> Ícones 192px e 512px (incluindo maskable)</label><span class="auto" data-auto="icones"></span></li>
-          <li><label><input type="checkbox" data-item="offline"> Responde offline (App Shell em cache)</label><span class="auto" data-auto="offline"></span></li>
-          <li><label><input type="checkbox" data-item="viewport"> Meta viewport para mobile</label><span class="auto" data-auto="viewport"></span></li>
-          <li><label><input type="checkbox" data-item="tema"> Define theme-color</label><span class="auto" data-auto="tema"></span></li>
+          <li><label><input type="checkbox" data-item="https"><span>Endereço seguro (https://, ou localhost)<small>Garante a conexão segura. Sem isso o Service Worker não funciona.</small></span></label><span class="auto" data-auto="https"></span></li>
+          <li><label><input type="checkbox" data-item="manifest"><span>A página aponta para um manifest válido<small>A "ficha de cadastro" que dá nome, cores e ícone ao app.</small></span></label><span class="auto" data-auto="manifest"></span></li>
+          <li><label><input type="checkbox" data-item="sw"><span>Um Service Worker está ativo e controlando a página<small>O "porteiro" que guarda arquivos e permite abrir sem internet.</small></span></label><span class="auto" data-auto="sw"></span></li>
+          <li><label><input type="checkbox" data-item="icones"><span>Ícones de 192 px e de 512 px, incluindo o tipo "maskable"<small>As imagens que representam o app na tela inicial.</small></span></label><span class="auto" data-auto="icones"></span></li>
+          <li><label><input type="checkbox" data-item="offline"><span>Os arquivos principais já estão guardados no cache<small>A "geladeira" do app já tem o necessário para abrir sem internet.</small></span></label><span class="auto" data-auto="offline"></span></li>
+          <li><label><input type="checkbox" data-item="viewport"><span>A página se ajusta ao tamanho da tela do celular<small>Feito por uma linha chamada "meta viewport".</small></span></label><span class="auto" data-auto="viewport"></span></li>
+          <li><label><input type="checkbox" data-item="tema"><span>Define a cor da barra do app (theme-color)<small>Deixa o app com a cara da sua marca.</small></span></label><span class="auto" data-auto="tema"></span></li>
         </ul>
         <div class="lab__acoes">
           <button id="btn-auto-checklist" class="btn btn--primario">Verificar este app</button>
           <button id="btn-limpar-checklist" class="btn btn--fantasma">Limpar marcações</button>
         </div>
         <p id="checklist-resultado" class="lab__saida" aria-live="polite">0 de 7 itens concluídos.</p>
+        <div class="caixa caixa--dica">
+          <strong>💡 Dica</strong>
+          Se o item do Service Worker ou do cache aparecer com ✘ logo na primeira visita, é normal: o "porteiro" acabou de ser contratado. Recarregue a página uma vez e verifique de novo.
+        </div>
       </div>
 
-      <footer class="modulo__rodape">
-        <span></span>
-        <button class="btn btn--sucesso btn-concluir" data-modulo="modulo-1">Marcar módulo como concluído</button>
-        <a class="btn btn--primario" href="#modulo-2" data-nav="modulo-2">Próximo: Manifest →</a>
-      </footer>
-    </section>
-
-    <!-- ================= MÓDULO 2 ================= -->
-    <section id="modulo-2" class="modulo" data-titulo="Módulo 2 — Web App Manifest e Instalação" hidden>
-      <header class="modulo__cab">
-        <p class="selo">Módulo 2 de 5</p>
-        <h2>Web App Manifest e Instalação</h2>
-        <p class="lead">O manifest é o "RG" do seu app: diz ao navegador como ele se chama, que aparência tem e como deve abrir depois de instalado.</p>
-      </header>
-
-      <h3>Propriedades essenciais</h3>
-      <dl class="definicoes">
-        <dt><code>name</code> / <code>short_name</code></dt>
-        <dd>Nome completo (telas de instalação) e nome curto (abaixo do ícone na tela inicial).</dd>
-        <dt><code>start_url</code></dt>
-        <dd>URL aberta ao iniciar o app instalado. Use caminho relativo para funcionar em subpastas (GitHub Pages). Parâmetros como <code>?source=pwa</code> ajudam a medir uso.</dd>
-        <dt><code>scope</code></dt>
-        <dd>Define quais URLs pertencem ao app. Links fora do escopo abrem no navegador comum.</dd>
-        <dt><code>display</code></dt>
-        <dd><code>standalone</code> (sem barra do navegador, o mais comum), <code>minimal-ui</code>, <code>fullscreen</code> ou <code>browser</code>.</dd>
-        <dt><code>icons</code> e <code>purpose: "maskable"</code></dt>
-        <dd>Ícones <em>any</em> são exibidos como estão. Ícones <em>maskable</em> têm uma "zona segura" central (cerca de 80%) para o Android recortá-los em círculo, quadrado arredondado etc. sem cortar o desenho.</dd>
-        <dt><code>theme_color</code> / <code>background_color</code></dt>
-        <dd>Cor da barra de título do app e cor de fundo da tela de abertura.</dd>
-      </dl>
-
-      <h3>Manifest do PWA Brasil (trecho)</h3>
-      <pre class="codigo"><code>{
-  "name": "PWA Brasil (PT-BR)",
-  "short_name": "PWA Brasil",
-  "start_url": "./index.html?source=pwa", // onde o app instalado abre
-  "scope": "./",                          // área controlada pelo app
-  "display": "standalone",                // aparência de app nativo
-  "icons": [
-    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "icons/icon-maskable-512.png", "sizes": "512x512",
-      "type": "image/png", "purpose": "maskable" } // recorte adaptativo
-  ]
-}</code></pre>
-      <p class="nota">Observação: JSON puro não aceita comentários. Os comentários acima são apenas didáticos; o arquivo real não os contém.</p>
-
-      <h3>Capturando o evento de instalação</h3>
-      <pre class="codigo"><code>let eventoInstalacao = null;
-
-// O navegador dispara este evento quando o app É instalável.
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();      // impede o mini-aviso automático
-  eventoInstalacao = e;    // guarda para usar quando o usuário clicar
-  botaoInstalar.disabled = false;
-});
-
-botaoInstalar.addEventListener('click', async () =&gt; {
-  eventoInstalacao.prompt();                       // mostra o diálogo nativo
-  const { outcome } = await eventoInstalacao.userChoice; // 'accepted' | 'dismissed'
-});</code></pre>
-
-      <div id="lab-instalacao" class="lab">
-        <h3>🧪 Laboratório: Instalar e inspecionar o manifest</h3>
-        <div class="lab__acoes">
-          <button id="btn-instalar" class="btn btn--primario" disabled>Instalar PWA Brasil</button>
-        </div>
-        <p id="instalar-status" class="lab__saida" aria-live="polite">Verificando se o app pode ser instalado…</p>
-
-        <div class="lab__acoes">
-          <button id="btn-carregar-manifest" class="btn btn--secundario">Ler manifest.webmanifest agora</button>
-        </div>
-        <div id="manifest-resumo" class="resumo-manifest"></div>
-        <pre id="manifest-saida" class="codigo codigo--saida" aria-live="polite">Clique em "Ler manifest" para buscar o arquivo real via fetch().</pre>
-        <p class="nota">Safari no iOS não dispara <code>beforeinstallprompt</code>: lá, use <em>Compartilhar → Adicionar à Tela de Início</em>.</p>
+      <div class="caixa caixa--resumo">
+        <strong>Resumo do módulo</strong>
+        <ul>
+          <li>PWA é um site que pode ser instalado, funciona offline e parece um app.</li>
+          <li>Ele precisa de HTTPS, de um manifest e de um Service Worker.</li>
+          <li>Tem um código só para todos os aparelhos, mas alguns recursos são mais limitados que nos apps nativos.</li>
+        </ul>
       </div>
 
       <footer class="modulo__rodape">
         <a class="btn btn--fantasma" href="#modulo-1" data-nav="modulo-1">← Anterior</a>
         <button class="btn btn--sucesso btn-concluir" data-modulo="modulo-2">Marcar módulo como concluído</button>
-        <a class="btn btn--primario" href="#modulo-3" data-nav="modulo-3">Próximo: Service Workers →</a>
+        <a class="btn btn--primario" href="#modulo-3" data-nav="modulo-3">Próximo: Manifest →</a>
       </footer>
     </section>
 
     <!-- ================= MÓDULO 3 ================= -->
-    <section id="modulo-3" class="modulo" data-titulo="Módulo 3 — Service Workers e Estratégias de Cache" hidden>
+    <section id="modulo-3" class="modulo" data-titulo="Módulo 3 — Manifest e instalação" hidden>
       <header class="modulo__cab">
-        <p class="selo">Módulo 3 de 5</p>
-        <h2>Service Workers e Estratégias de Cache</h2>
-        <p class="lead">O Service Worker é um proxy programável que roda em segundo plano, separado da página. É ele quem torna o app confiável offline.</p>
+        <p class="selo">Módulo 3 de 7</p>
+        <h2>Manifest e instalação</h2>
+        <p class="lead">O manifest é a ficha de cadastro do seu app. É ele que diz ao celular como o app se chama, qual é o seu ícone e como deve abrir.</p>
       </header>
 
-      <h3>Ciclo de vida</h3>
-      <ol class="passos">
-        <li><strong>register</strong> — a página pede o registro do <code>sw.js</code>.</li>
-        <li><strong>install</strong> — o SW é baixado e faz o <em>pré-cache</em> do App Shell.</li>
-        <li><strong>waiting</strong> — se já existe um SW ativo, o novo espera as abas antigas fecharem (ou <code>skipWaiting</code>).</li>
-        <li><strong>activate</strong> — assume o controle e limpa caches antigos.</li>
-        <li><strong>fetch</strong> — passa a interceptar cada requisição da página.</li>
-      </ol>
+      <div class="caixa caixa--objetivos">
+        <strong>O que você vai aprender neste módulo</strong>
+        <ul>
+          <li>O que é um arquivo JSON e como lê-lo.</li>
+          <li>Para que serve cada campo do manifest.</li>
+          <li>Como instalar um PWA em cada aparelho.</li>
+          <li>Como o código sabe que o app pode ser instalado.</li>
+        </ul>
+      </div>
 
-      <pre class="codigo"><code>self.addEventListener('install', (e) =&gt; {
-  // Baixa e guarda os arquivos essenciais
-  e.waitUntil(caches.open('shell-v1').then((c) =&gt; c.addAll(['./', './app.js'])));
+      <h3>Antes: o que é JSON?</h3>
+      <p>O manifest é escrito em <strong>JSON</strong>, um jeito de organizar informações em texto. Funciona como um formulário preenchido: cada campo tem um <strong>nome</strong> (chamado <em>chave</em>) e um <strong>valor</strong>.</p>
+      <pre class="codigo"><code>{
+  "nome": "Ana",
+  "idade": 30,
+  "gosta_de": ["café", "música"]
+}</code></pre>
+      <p>Regras básicas, que você vai ver o tempo todo:</p>
+      <ul>
+        <li>Tudo fica entre chaves <code>{ }</code>.</li>
+        <li>Chave e valor são separados por dois-pontos: <code>"nome": "Ana"</code>.</li>
+        <li>Textos ficam entre <strong>aspas duplas</strong>; números não têm aspas.</li>
+        <li>Uma lista fica entre colchetes <code>[ ]</code>, com itens separados por vírgula.</li>
+        <li>Vírgula entre os pares, mas <strong>não</strong> depois do último. Esquecer isso é o erro mais comum.</li>
+      </ul>
+
+      <h3>O que é o manifest</h3>
+      <p>O manifest é um arquivo (aqui chamado <code>manifest.webmanifest</code>) com o JSON que descreve o app. A página o encontra por esta linha no <code>&lt;head&gt;</code> do HTML:</p>
+      <pre class="codigo"><code>&lt;link rel="manifest" href="manifest.webmanifest"&gt;</code></pre>
+
+      <h3>Os campos mais importantes</h3>
+      <dl class="definicoes">
+        <dt><code>name</code> e <code>short_name</code></dt>
+        <dd>O nome completo e o nome curto. O curto aparece embaixo do ícone na tela inicial, onde o espaço é pequeno.</dd>
+        <dt><code>start_url</code></dt>
+        <dd>A página que abre quando você toca no ícone do app instalado. Normalmente é a página inicial.</dd>
+        <dt><code>scope</code> (escopo)</dt>
+        <dd>A "área" do app. Links para dentro dessa área abrem no app; links para fora abrem no navegador comum.</dd>
+        <dt><code>display</code></dt>
+        <dd>Como o app aparece. <code>standalone</code> esconde a barra de endereços do navegador, e o app fica com cara de aplicativo de verdade. Outras opções: <code>browser</code> (aba comum), <code>minimal-ui</code> e <code>fullscreen</code> (tela cheia, comum em jogos).</dd>
+        <dt><code>icons</code></dt>
+        <dd>Uma lista de imagens do ícone em vários tamanhos. O celular escolhe o que melhor se encaixa. O mínimo recomendado é 192×192 e 512×512 pixels.</dd>
+        <dt><code>purpose: "maskable"</code></dt>
+        <dd>Alguns celulares recortam o ícone em círculo ou quadrado arredondado. Se o desenho for até a borda, perde pedaço. Um ícone <em>maskable</em> deixa uma margem de segurança: o desenho importante fica no centro (cerca de 80% da imagem), e o resto é só fundo.</dd>
+        <dt><code>theme_color</code> e <code>background_color</code></dt>
+        <dd>A cor da barra superior do app e a cor da tela de abertura (aquele fundo que aparece enquanto o app carrega).</dd>
+        <dt><code>lang</code></dt>
+        <dd>O idioma do app. Para nós, <code>pt-BR</code>.</dd>
+      </dl>
+
+      <h3>O manifest do PWA Brasil (trecho)</h3>
+      <pre class="codigo"><code>{
+  "name": "PWA Brasil (PT-BR)",
+  "short_name": "PWA Brasil",
+  "start_url": "./index.html?source=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512",
+      "type": "image/png", "purpose": "maskable" }
+  ]
+}</code></pre>
+      <div class="caixa caixa--atencao">
+        <strong>⚠️ JSON não aceita comentários</strong>
+        Por isso o bloco acima está sem explicações dentro. Se você escrever comentários num arquivo JSON, o manifest fica inválido e o navegador o ignora. Use o laboratório mais abaixo para conferir o seu.
+      </div>
+
+      <h3>Como instalar um PWA</h3>
+      <p>Instalar significa colocar o ícone do app na tela inicial ou na lista de programas, para abri-lo como qualquer aplicativo. O caminho depende do aparelho:</p>
+      <ul>
+        <li><strong>Chrome no Android:</strong> menu <em>⋮</em> (três pontinhos) → <em>Instalar app</em> (ou <em>Adicionar à tela inicial</em>).</li>
+        <li><strong>Chrome e Edge no computador:</strong> clique no ícone de instalar, na ponta direita da barra de endereços.</li>
+        <li><strong>Safari no iPhone/iPad:</strong> botão <em>Compartilhar</em> → <em>Adicionar à Tela de Início</em>.</li>
+      </ul>
+      <p>Os navegadores baseados em Chrome também deixam o <em>seu código</em> oferecer um botão "Instalar" dentro da própria página. É isso que fazemos no laboratório.</p>
+
+      <h3>Como o código descobre que dá para instalar</h3>
+      <p>Um <strong>evento</strong> é um aviso que o navegador dá ao seu código quando algo acontece (um clique, a internet que caiu, uma instalação que ficou possível). O código "fica de ouvido": <em>"quando acontecer tal coisa, faça isto"</em>.</p>
+      <pre class="codigo"><code>let eventoInstalacao = null;   // uma caixinha vazia, para guardar o aviso
+
+// "Quando o navegador avisar que o app PODE ser instalado..."
+window.addEventListener('beforeinstallprompt', (e) =&gt; {
+  e.preventDefault();          // não mostre o aviso padrão agora
+  eventoInstalacao = e;        // guarde o aviso para usar depois
+  botaoInstalar.disabled = false;   // libera o nosso botão
 });
 
-self.addEventListener('activate', (e) =&gt; {
-  // Apaga caches de versões antigas
-  e.waitUntil(limparCachesAntigos());
-});
-
-self.addEventListener('fetch', (e) =&gt; {
-  // Decide: cache, rede, ou os dois?
-  e.respondWith(caches.match(e.request).then((r) =&gt; r || fetch(e.request)));
+// "Quando a pessoa clicar no nosso botão..."
+botaoInstalar.addEventListener('click', async () =&gt; {
+  eventoInstalacao.prompt();   // mostra a janela de instalação do navegador
+  const { outcome } = await eventoInstalacao.userChoice;   // espera a resposta:
+  // outcome vale 'accepted' (aceitou) ou 'dismissed' (recusou)
 });</code></pre>
 
-      <h3>Estratégias de cache</h3>
+      <div id="lab-instalacao" class="lab">
+        <h3>🧪 Laboratório: Instalar o PWA e inspecionar o manifest</h3>
+        <h4>Parte 1: instalar</h4>
+        <p>Se o seu navegador liberar a instalação, o botão abaixo será habilitado. Ao clicar, aparece a janela de instalação.</p>
+        <div class="lab__acoes">
+          <button id="btn-instalar" class="btn btn--primario" disabled>Instalar PWA Brasil</button>
+        </div>
+        <p id="instalar-status" class="lab__saida" aria-live="polite">Verificando se o app pode ser instalado…</p>
+
+        <h4>Parte 2: ler o manifest de verdade</h4>
+        <p>Este botão busca agora o arquivo <code>manifest.webmanifest</code> real do app e mostra o conteúdo, junto com um resumo e os ícones.</p>
+        <div class="lab__acoes">
+          <button id="btn-carregar-manifest" class="btn btn--secundario">Ler manifest.webmanifest agora</button>
+        </div>
+        <div id="manifest-resumo" class="resumo-manifest"></div>
+        <pre id="manifest-saida" class="codigo codigo--saida" aria-live="polite">Clique em "Ler manifest" para ver o arquivo.</pre>
+        <div class="caixa caixa--dica">
+          <strong>💡 Dica: o botão ficou desabilitado?</strong>
+          Isso é normal no iPhone (o Safari não envia esse aviso: use <em>Compartilhar → Adicionar à Tela de Início</em>), no Firefox do computador, ou se o app já estiver instalado.
+        </div>
+      </div>
+
+      <div class="caixa caixa--resumo">
+        <strong>Resumo do módulo</strong>
+        <ul>
+          <li>O manifest é um arquivo JSON com nome, ícones, cores e modo de exibição do app.</li>
+          <li>Ele é ligado à página por uma tag <code>&lt;link rel="manifest"&gt;</code>.</li>
+          <li>Ícones <em>maskable</em> têm margem de segurança para o recorte do celular.</li>
+          <li>O navegador avisa por um evento quando o app pode ser instalado.</li>
+        </ul>
+      </div>
+
+      <footer class="modulo__rodape">
+        <a class="btn btn--fantasma" href="#modulo-2" data-nav="modulo-2">← Anterior</a>
+        <button class="btn btn--sucesso btn-concluir" data-modulo="modulo-3">Marcar módulo como concluído</button>
+        <a class="btn btn--primario" href="#modulo-4" data-nav="modulo-4">Próximo: Service Worker →</a>
+      </footer>
+    </section>
+
+    <!-- ================= MÓDULO 4 ================= -->
+    <section id="modulo-4" class="modulo" data-titulo="Módulo 4 — Service Worker e cache" hidden>
+      <header class="modulo__cab">
+        <p class="selo">Módulo 4 de 7</p>
+        <h2>Service Worker e cache</h2>
+        <p class="lead">Aqui está a mágica do PWA: um funcionário invisível que guarda os arquivos do app no seu aparelho e entrega tudo mesmo quando a internet some.</p>
+      </header>
+
+      <div class="caixa caixa--objetivos">
+        <strong>O que você vai aprender neste módulo</strong>
+        <ul>
+          <li>O que é cache e por que ele deixa tudo mais rápido.</li>
+          <li>O que é um Service Worker e como ele "nasce", "trabalha" e é "substituído".</li>
+          <li>As três estratégias de cache mais usadas.</li>
+          <li>Como ver e testar tudo isso funcionando.</li>
+        </ul>
+      </div>
+
+      <h3>O que é cache?</h3>
+      <p><strong>Cache</strong> é um lugar onde guardamos uma cópia de algo para não precisar buscar de novo. Quando você abre um site, o navegador baixa imagens, estilos e códigos. Se ele guardar uma cópia no aparelho, da próxima vez abre muito mais rápido, e até sem internet.</p>
+      <div class="caixa caixa--analogia">
+        <strong>🏠 Analogia: a geladeira e o mercado</strong>
+        Se você precisa de leite, pode ir ao mercado toda vez (a internet: demora e depende de estar aberto) ou manter uma caixa na geladeira (o cache: está ali, na hora). O segredo é decidir <em>quando</em> usar a geladeira e <em>quando</em> ir ao mercado. Essa decisão é a "estratégia de cache".
+      </div>
+
+      <h3>O que é um Service Worker?</h3>
+      <p>O <strong>Service Worker</strong> ("trabalhador de serviço") é um pequeno arquivo JavaScript que o navegador mantém rodando <em>em segundo plano</em>, separado da página. Ele fica entre o app e a internet e vê todos os pedidos de arquivos que o app faz. Para cada pedido ele pode decidir: <em>"entrego a cópia guardada"</em> ou <em>"busco na internet"</em>.</p>
+      <p>Retomando a analogia do restaurante do Módulo 1: o Service Worker é um <strong>funcionário na porta da cozinha</strong>. Quando o garçom (internet) falha, ele ainda serve o prato que já deixou pronto na geladeira.</p>
+      <div class="caixa caixa--atencao">
+        <strong>⚠️ Duas regras importantes</strong>
+        O Service Worker só funciona em HTTPS (ou localhost), e ele não consegue mexer diretamente nos elementos da página: a comunicação entre os dois é feita por mensagens.
+      </div>
+
+      <h3>O ciclo de vida: como o Service Worker "nasce" e "trabalha"</h3>
+      <p>Ele passa por etapas, como um funcionário novo:</p>
+      <ol class="passos">
+        <li><strong>register (registro):</strong> a página pede ao navegador: "contrate este arquivo, <code>sw.js</code>, como Service Worker". É o contrato.</li>
+        <li><strong>install (instalação):</strong> o funcionário recebe o treinamento. Aqui ele baixa e guarda no cache os arquivos essenciais do app, o chamado <em>App Shell</em> (a "casca" do app: HTML, CSS, JS e ícones).</li>
+        <li><strong>waiting (espera):</strong> se já existe um funcionário trabalhando, o novato espera na fila até o antigo sair. Veremos isso no módulo de atualização.</li>
+        <li><strong>activate (ativação):</strong> começa a trabalhar. Aproveita para jogar fora o cache de versões velhas.</li>
+        <li><strong>fetch (atendimento):</strong> a partir daí, cada pedido de arquivo passa por ele.</li>
+      </ol>
+
+      <h3>O código, com tudo explicado</h3>
+      <p>Não se assuste: leia os comentários (as linhas que começam com <code>//</code>) como se fossem uma narração. Palavras que você vai ver: <code>.then(...)</code> quer dizer "e depois disso, faça..."; <code>async</code>/<code>await</code> é outra forma de dizer "espere isso terminar".</p>
+      <pre class="codigo"><code>// ETAPA INSTALL: roda uma vez, quando o Service Worker é baixado.
+self.addEventListener('install', (evento) =&gt; {
+  evento.waitUntil(                      // "espere terminar antes de seguir"
+    caches.open('meu-cache-v1')          // abre (ou cria) uma gaveta chamada 'meu-cache-v1'
+      .then((cache) =&gt; cache.addAll([    // e DEPOIS disso, baixa e guarda estes arquivos:
+        './', './index.html', './app.js'
+      ]))
+  );
+});
+
+// ETAPA ACTIVATE: roda quando ele começa a trabalhar.
+self.addEventListener('activate', (evento) =&gt; {
+  // limparCachesAntigos() é uma função de exemplo que apagaria as gavetas de versões antigas
+  evento.waitUntil(limparCachesAntigos());
+});
+
+// ETAPA FETCH: roda a CADA pedido de arquivo feito pela página.
+self.addEventListener('fetch', (evento) =&gt; {
+  evento.respondWith(                    // "eu respondo por você"
+    caches.match(evento.request)         // procura o arquivo na geladeira
+      .then((guardado) =&gt; guardado || fetch(evento.request))
+      // achou? usa a cópia. Não achou? vai buscar na internet.
+  );
+});</code></pre>
+
+      <h3>As três estratégias de cache</h3>
       <div class="grade-3">
         <article class="cartao">
-          <h4>Cache First</h4>
-          <p>Cache → (se faltar) rede. Mais rápida. Ideal para arquivos versionados: CSS, JS, imagens, fontes.</p>
+          <h4>Cache First<br><small>"Geladeira primeiro"</small></h4>
+          <p>Olha primeiro no cache; só vai à internet se não achar. É a mais rápida. Boa para arquivos que quase não mudam: estilos, scripts, ícones.</p>
         </article>
         <article class="cartao">
-          <h4>Network First</h4>
-          <p>Rede → (se falhar) cache. Sempre fresca quando online. Ideal para HTML e dados que mudam.</p>
+          <h4>Network First<br><small>"Mercado primeiro"</small></h4>
+          <p>Tenta a internet; se falhar (você está offline), usa o cache. Boa para conteúdo que precisa estar sempre atualizado, como a própria página principal.</p>
         </article>
         <article class="cartao">
-          <h4>Stale-While-Revalidate</h4>
-          <p>Responde com o cache e atualiza em segundo plano. Equilíbrio entre velocidade e atualidade.</p>
+          <h4>Stale-While-Revalidate<br><small>"Usa já, renova depois"</small></h4>
+          <p>Entrega na hora o que tem guardado e, ao mesmo tempo, busca uma versão nova para a próxima vez. Equilibra rapidez e atualidade. (<em>Stale</em> = velho; <em>revalidate</em> = conferir de novo.)</p>
         </article>
       </div>
 
-      <h3>Estado do Service Worker agora</h3>
+      <h3>O Service Worker agora, ao vivo</h3>
+      <p>O quadro abaixo mostra o estado <strong>real</strong> do Service Worker deste app, neste exato momento:</p>
       <dl id="sw-info" class="info-grade">
         <div><dt>Suporte</dt><dd data-sw="suporte">—</dd></div>
-        <div><dt>Escopo</dt><dd data-sw="escopo">—</dd></div>
-        <div><dt>Estado</dt><dd data-sw="estado">—</dd></div>
+        <div><dt>Escopo (área que ele cuida)</dt><dd data-sw="escopo">—</dd></div>
+        <div><dt>Estado no ciclo de vida</dt><dd data-sw="estado">—</dd></div>
         <div><dt>Controlando esta página</dt><dd data-sw="controle">—</dd></div>
-        <div><dt>Versão do cache (sw.js)</dt><dd data-sw="versao">—</dd></div>
+        <div><dt>Versão do cache (definida no sw.js)</dt><dd data-sw="versao">—</dd></div>
       </dl>
 
       <div id="lab-cache" class="lab">
         <h3>🧪 Laboratório: Inspetor de Cache</h3>
-        <p>Lista o que o <code>CacheStorage</code> guarda neste momento (via <code>caches.keys()</code> e <code>cache.keys()</code>).</p>
+        <h4>Parte 1: ver a geladeira por dentro</h4>
+        <p>A lista abaixo mostra o que está guardado agora no <strong>CacheStorage</strong>, o armazenamento de cache do navegador. Cada caixa é uma "gaveta" (um cache) com os arquivos dentro.</p>
         <div class="lab__acoes">
           <button id="btn-cache-atualizar" class="btn btn--primario">Atualizar lista</button>
           <button id="btn-cache-limpar" class="btn btn--perigo">Limpar todo o cache</button>
         </div>
         <div id="cache-lista" class="cache-lista" aria-live="polite"><p class="nota">Carregando…</p></div>
 
-        <h4>Testar uma requisição simulada</h4>
-        <p>Escolha uma estratégia e faça uma requisição. O Service Worker responde de verdade e informa, pelos cabeçalhos <code>X-SW-Strategy</code> e <code>X-SW-Origem</code>, de onde veio a resposta.</p>
+        <h4>Parte 2: testar as estratégias</h4>
+        <p>Aqui você faz uma requisição de mentirinha, e o Service Worker responde de verdade. O resultado diz <strong>quem respondeu</strong> (cache ou "rede") e <strong>quanto tempo levou</strong>.</p>
         <div class="form-linha">
           <label>Estratégia
             <select id="lab-estrategia">
@@ -336,79 +667,142 @@ self.addEventListener('fetch', (e) =&gt; {
               <option value="swr">Stale-While-Revalidate</option>
             </select>
           </label>
-          <label>Recurso
+          <label>Nome do recurso
             <input id="lab-recurso" type="text" value="aula-1" maxlength="40">
           </label>
-          <label class="check-inline"><input id="lab-falhar" type="checkbox"> Simular rede fora do ar</label>
+          <label class="check-inline"><input id="lab-falhar" type="checkbox"> Simular internet fora do ar</label>
         </div>
         <div class="lab__acoes">
           <button id="btn-lab-testar" class="btn btn--secundario">Fazer requisição</button>
         </div>
-        <pre id="lab-resultado" class="codigo codigo--saida" aria-live="polite">Nenhuma requisição feita ainda. Dica: faça a mesma requisição duas vezes e compare a origem.</pre>
+        <pre id="lab-resultado" class="codigo codigo--saida" aria-live="polite">Nenhuma requisição feita ainda.</pre>
+
+        <p><strong>Experimentos para fazer, em ordem:</strong></p>
+        <ol class="passos">
+          <li>Escolha <em>Cache First</em> e clique em "Fazer requisição". Na 1ª vez a resposta vem da "rede" e é guardada. Veja o novo arquivo na lista de cache.</li>
+          <li>Clique de novo. Agora vem do <strong>cache</strong>, e o tempo cai, porque não houve espera.</li>
+          <li>Troque para <em>Network First</em>, marque "Simular internet fora do ar" e faça a requisição. Ela vai tentar a rede, falhar e usar o cache, se houver cópia daquele nome. Se não houver, dará erro 504: "sem rede e sem cópia".</li>
+          <li>Troque para <em>Stale-While-Revalidate</em> e repita a requisição. Veja que a resposta vem do cache, mas diz que está <em>revalidando em segundo plano</em>.</li>
+        </ol>
+        <div class="caixa caixa--atencao">
+          <strong>⚠️ "Limpar todo o cache" apaga a geladeira inteira</strong>
+          O app volta a funcionar normalmente enquanto houver internet, e os arquivos vão sendo guardados de novo. Mas, sem internet, ele não abrirá até você recarregar a página online uma vez.
+        </div>
+      </div>
+
+      <div class="caixa caixa--resumo">
+        <strong>Resumo do módulo</strong>
+        <ul>
+          <li>Cache é uma cópia guardada para abrir mais rápido e funcionar offline.</li>
+          <li>O Service Worker é um script em segundo plano que decide o que vem do cache e o que vem da internet.</li>
+          <li>Ciclo de vida: register → install → (waiting) → activate → fetch.</li>
+          <li>Estratégias: Cache First (rápida), Network First (atualizada) e Stale-While-Revalidate (as duas coisas).</li>
+        </ul>
       </div>
 
       <footer class="modulo__rodape">
-        <a class="btn btn--fantasma" href="#modulo-2" data-nav="modulo-2">← Anterior</a>
-        <button class="btn btn--sucesso btn-concluir" data-modulo="modulo-3">Marcar módulo como concluído</button>
-        <a class="btn btn--primario" href="#modulo-4" data-nav="modulo-4">Próximo: Recursos Nativos →</a>
+        <a class="btn btn--fantasma" href="#modulo-3" data-nav="modulo-3">← Anterior</a>
+        <button class="btn btn--sucesso btn-concluir" data-modulo="modulo-4">Marcar módulo como concluído</button>
+        <a class="btn btn--primario" href="#modulo-5" data-nav="modulo-5">Próximo: Recursos do aparelho →</a>
       </footer>
     </section>
 
-    <!-- ================= MÓDULO 4 ================= -->
-    <section id="modulo-4" class="modulo" data-titulo="Módulo 4 — Recursos Nativos e Engajamento" hidden>
+    <!-- ================= MÓDULO 5 ================= -->
+    <section id="modulo-5" class="modulo" data-titulo="Módulo 5 — Recursos do aparelho" hidden>
       <header class="modulo__cab">
-        <p class="selo">Módulo 4 de 5</p>
-        <h2>Recursos Nativos e Engajamento</h2>
-        <p class="lead">PWAs conversam com o sistema operacional: guardam dados, compartilham conteúdo e avisam o usuário.</p>
+        <p class="selo">Módulo 5 de 7</p>
+        <h2>Recursos do aparelho</h2>
+        <p class="lead">Um PWA pode guardar dados, abrir a tela de compartilhar do celular e enviar avisos. Tudo isso com permissão da pessoa.</p>
       </header>
 
-      <h3>Armazenamento local</h3>
-      <ul>
-        <li><strong>localStorage</strong>: simples, síncrono, só texto (~5 MB). Este app guarda tema e progresso nele.</li>
-        <li><strong>IndexedDB</strong>: banco assíncrono para dados estruturados e grandes.</li>
-        <li><strong>CacheStorage</strong>: pares requisição/resposta, usado pelo Service Worker.</li>
-      </ul>
-      <pre class="codigo"><code>// Guardar e ler progresso do aluno
-localStorage.setItem('progresso', JSON.stringify(['modulo-1']));
-const feitos = JSON.parse(localStorage.getItem('progresso') || '[]');</code></pre>
+      <div class="caixa caixa--objetivos">
+        <strong>O que você vai aprender neste módulo</strong>
+        <ul>
+          <li>O que é uma API do navegador.</li>
+          <li>Onde guardar dados: localStorage, IndexedDB e CacheStorage.</li>
+          <li>Como usar o compartilhamento nativo.</li>
+          <li>Como funcionam as notificações e as permissões.</li>
+        </ul>
+      </div>
 
-      <h3>Web Share API</h3>
-      <pre class="codigo"><code>if (navigator.share) {
+      <h3>O que é uma API?</h3>
+      <p><strong>API</strong> é uma "tomada" que o navegador oferece ao seu código: um conjunto de comandos prontos para pedir coisas ao aparelho, como "compartilhe isto" ou "guarde aquilo". Você não precisa saber <em>como</em> o celular faz; só <em>pede</em>.</p>
+
+      <h3>Onde guardar dados no aparelho</h3>
+      <div class="tabela-wrap">
+        <table>
+          <thead><tr><th>Nome</th><th>Como imaginar</th><th>Quando usar</th></tr></thead>
+          <tbody>
+            <tr><td><strong>localStorage</strong></td><td>Um caderninho de bolso</td><td>Pequenas preferências em texto: tema escuro, apelido, progresso.</td></tr>
+            <tr><td><strong>IndexedDB</strong></td><td>Um arquivo com gavetas organizadas</td><td>Muitos dados estruturados: listas, anotações, registros.</td></tr>
+            <tr><td><strong>CacheStorage</strong></td><td>A geladeira do Service Worker</td><td>Cópias de arquivos para funcionar offline (Módulo 4).</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="caixa caixa--atencao">
+        <strong>⚠️ Cuidado</strong>
+        Esses dados ficam <em>só naquele navegador, naquele aparelho</em>. Se a pessoa limpar os dados do site, eles somem. E nunca guarde senhas ou dados sensíveis ali.
+      </div>
+      <pre class="codigo"><code>// Guardar: setItem('nome-da-gaveta', 'valor em texto')
+localStorage.setItem('apelido', 'Ana');
+
+// Ler de volta: getItem('nome-da-gaveta')
+const apelido = localStorage.getItem('apelido');   // "Ana"
+
+// Listas viram texto com JSON.stringify e voltam com JSON.parse
+localStorage.setItem('feitos', JSON.stringify(['modulo-1', 'modulo-2']));
+const feitos = JSON.parse(localStorage.getItem('feitos'));</code></pre>
+
+      <h3>Compartilhamento nativo (Web Share API)</h3>
+      <p>Sabe aquela janela do celular com os ícones de WhatsApp, e-mail, Telegram e outros? Com a <strong>Web Share API</strong> o seu app pode abri-la com um link ou texto já preenchido. Funciona melhor em celulares, e só depois de um clique da pessoa (o navegador não deixa "disparar sozinho").</p>
+      <pre class="codigo"><code>// Primeiro, confere se o navegador sabe compartilhar
+if (navigator.share) {
   await navigator.share({
-    title: 'PWA Brasil (PT-BR)',
-    text: 'Aprenda a criar PWAs!',
-    url: location.href
+    title: 'PWA Brasil (PT-BR)',            // título
+    text: 'Aprenda a criar PWAs!',          // mensagem
+    url: location.href                       // o link atual
   });
 }</code></pre>
 
-      <h3>Notificações</h3>
-      <p>Exigem <strong>permissão do usuário</strong>, que deve ser pedida após um gesto (clique), nunca ao carregar a página. Para notificações com o app fechado é preciso a Push API e um servidor; aqui testamos notificações locais exibidas pelo Service Worker.</p>
-      <pre class="codigo"><code>const permissao = await Notification.requestPermission(); // 'granted' | 'denied' | 'default'
+      <h3>Notificações e permissões</h3>
+      <p>Uma <strong>notificação</strong> é um aviso que aparece fora do app, no canto da tela. Como pode ser incômodo, o navegador exige <strong>permissão</strong> da pessoa. A permissão tem três estados: <em>default</em> (ainda não perguntado), <em>granted</em> (concedida) e <em>denied</em> (negada).</p>
+      <div class="caixa caixa--dica">
+        <strong>💡 Boas práticas</strong>
+        Peça permissão só depois de um clique, e explique antes <em>por que</em> você quer enviar avisos. Quem recebe um pedido surpresa na hora em que abre o site costuma negar, e é difícil reverter.
+      </div>
+      <p>Neste curso mostramos <strong>notificações locais</strong>: o app mesmo cria o aviso. Para avisar com o app fechado (como o aviso de nova mensagem), é preciso a <em>Push API</em> e um servidor, assunto para um estudo mais avançado.</p>
+      <pre class="codigo"><code>// Pede permissão (só depois de um clique!)
+const permissao = await Notification.requestPermission();
+
 if (permissao === 'granted') {
-  const reg = await navigator.serviceWorker.ready;
-  reg.showNotification('Olá!', { body: 'Notificação via Service Worker' });
+  // "ready" = espere o Service Worker estar pronto
+  const registro = await navigator.serviceWorker.ready;
+  registro.showNotification('Olá!', { body: 'Este aviso foi criado pelo app.' });
 }</code></pre>
 
       <div id="lab-nativo" class="lab">
-        <h3>🧪 Laboratório: Compartilhar e Notificações</h3>
+        <h3>🧪 Laboratório: Armazenamento, Compartilhar e Notificações</h3>
 
-        <h4>Armazenamento: seu apelido</h4>
+        <h4>1) Armazenamento: guarde seu apelido</h4>
+        <p>Digite um apelido e clique em Salvar. Depois feche e abra o app: ele continuará aqui.</p>
         <div class="form-linha">
-          <label>Apelido (salvo em localStorage)
+          <label>Apelido (salvo no localStorage)
             <input id="storage-input" type="text" maxlength="30" placeholder="Ex.: Ana">
           </label>
           <button id="btn-storage-salvar" class="btn btn--secundario">Salvar</button>
         </div>
         <p id="storage-saida" class="lab__saida" aria-live="polite"></p>
 
-        <h4>Compartilhamento nativo</h4>
+        <h4>2) Compartilhamento nativo</h4>
+        <p>Clique para abrir a janela de compartilhar do seu aparelho. Se ele não tiver esse recurso, o app copia o link para você colar onde quiser.</p>
         <div class="lab__acoes">
           <button id="btn-compartilhar-app" class="btn btn--primario">Compartilhar o PWA Brasil</button>
           <button id="btn-compartilhar-aula" class="btn btn--secundario">Compartilhar esta aula</button>
         </div>
         <p id="share-status" class="lab__saida" aria-live="polite"></p>
 
-        <h4>Permissão de notificações</h4>
+        <h4>3) Permissão de notificações</h4>
+        <p>Clique em "Pedir permissão". O navegador vai perguntar se você aceita. Se aceitar, o botão de teste é liberado.</p>
         <div class="lab__acoes">
           <button id="btn-notif" class="btn btn--primario">Pedir permissão</button>
           <button id="btn-notif-teste" class="btn btn--secundario" disabled>Enviar notificação de teste</button>
@@ -416,77 +810,395 @@ if (permissao === 'granted') {
         <p id="notif-status" class="lab__saida" aria-live="polite"></p>
       </div>
 
-      <footer class="modulo__rodape">
-        <a class="btn btn--fantasma" href="#modulo-3" data-nav="modulo-3">← Anterior</a>
-        <button class="btn btn--sucesso btn-concluir" data-modulo="modulo-4">Marcar módulo como concluído</button>
-        <a class="btn btn--primario" href="#modulo-5" data-nav="modulo-5">Próximo: Auditoria e Deploy →</a>
-      </footer>
-    </section>
-
-    <!-- ================= MÓDULO 5 ================= -->
-    <section id="modulo-5" class="modulo" data-titulo="Módulo 5 — Auditoria, Atualização e Deploy" hidden>
-      <header class="modulo__cab">
-        <p class="selo">Módulo 5 de 5</p>
-        <h2>Auditoria, Ciclo de Atualização e Deploy</h2>
-        <p class="lead">Um PWA de verdade precisa ser medido, atualizado com segurança e publicado em HTTPS.</p>
-      </header>
-
-      <h3>Auditando com o Lighthouse</h3>
-      <ol class="passos">
-        <li>Abra o app no Chrome e pressione <kbd>F12</kbd> (DevTools).</li>
-        <li>Vá à aba <strong>Lighthouse</strong> e marque Desempenho, Acessibilidade, Boas práticas e SEO.</li>
-        <li>Clique em <strong>Analisar</strong> e leia as recomendações.</li>
-        <li>Na aba <strong>Application</strong>, confira Manifest, Service Workers e Cache Storage.</li>
-      </ol>
-      <p class="nota">Versões recentes do Lighthouse removeram a categoria "PWA" dedicada; os mesmos requisitos aparecem na aba Application e nas verificações de instalabilidade do DevTools.</p>
-
-      <h3>Atualização de versão</h3>
-      <p>Quando você altera o <code>sw.js</code>, o navegador baixa a nova versão, instala-a e a deixa em <em>waiting</em>. A página detecta isso e mostra o banner; ao clicar em "Atualizar", enviamos uma mensagem para o SW chamar <code>skipWaiting()</code>, e então recarregamos.</p>
-      <pre class="codigo"><code>// --- app.js (página) ---
-reg.addEventListener('updatefound', () =&gt; {
-  const novo = reg.installing;
-  novo.addEventListener('statechange', () =&gt; {
-    // "installed" + já existe controller = há uma versão nova esperando
-    if (novo.state === 'installed' &amp;&amp; navigator.serviceWorker.controller) {
-      mostrarBanner();
-    }
-  });
-});
-btnAtualizar.onclick = () =&gt; reg.waiting.postMessage({ tipo: 'PULAR_ESPERA' });
-navigator.serviceWorker.addEventListener('controllerchange', () =&gt; location.reload());
-
-// --- sw.js ---
-self.addEventListener('message', (e) =&gt; {
-  if (e.data.tipo === 'PULAR_ESPERA') self.skipWaiting();
-});</code></pre>
-
-      <div id="lab-atualizacao" class="lab">
-        <h3>🧪 Laboratório: Ciclo de atualização</h3>
-        <div class="lab__acoes">
-          <button id="btn-checar-atualizacao" class="btn btn--primario">Procurar nova versão</button>
-        </div>
-        <p id="atualizacao-status" class="lab__saida" aria-live="polite">Versão do cache ativo: <strong id="versao-sw">—</strong></p>
-        <p class="nota">Para ver o banner: altere a constante <code>VERSAO</code> em <code>sw.js</code>, salve, publique e clique em "Procurar nova versão".</p>
-      </div>
-
-      <h3>Publicando no GitHub Pages (HTTPS grátis)</h3>
-      <ol class="passos">
-        <li>Crie um repositório e envie todos os arquivos (<code>index.html</code>, <code>sw.js</code>, etc.) na raiz.</li>
-        <li>Em <strong>Settings → Pages</strong>, escolha a branch <code>main</code> e a pasta <code>/ (root)</code>.</li>
-        <li>Aguarde o deploy; o app ficará em <code>https://usuario.github.io/repositorio/</code>.</li>
-        <li>Como todos os caminhos são <strong>relativos</strong>, o app funciona dentro da subpasta do repositório.</li>
-      </ol>
-      <p>Para testar localmente: <code>python3 -m http.server 8080</code> e abra <code>http://localhost:8080</code>. Abrir o arquivo com <code>file://</code> <strong>não</strong> ativa o Service Worker.</p>
-
-      <div class="parabens" id="parabens" hidden>
-        <h3>🎉 Parabéns!</h3>
-        <p>Você concluiu os 5 módulos. Agora publique o seu próprio PWA!</p>
+      <div class="caixa caixa--resumo">
+        <strong>Resumo do módulo</strong>
+        <ul>
+          <li>API é um conjunto de comandos que o navegador oferece ao seu código.</li>
+          <li>localStorage guarda pouca coisa em texto, e IndexedDB guarda dados grandes e organizados.</li>
+          <li>Compartilhar e notificar dependem de clique e de permissão da pessoa.</li>
+        </ul>
       </div>
 
       <footer class="modulo__rodape">
         <a class="btn btn--fantasma" href="#modulo-4" data-nav="modulo-4">← Anterior</a>
         <button class="btn btn--sucesso btn-concluir" data-modulo="modulo-5">Marcar módulo como concluído</button>
+        <a class="btn btn--primario" href="#modulo-6" data-nav="modulo-6">Próximo: Testar e publicar →</a>
+      </footer>
+    </section>
+
+    <!-- ================= MÓDULO 6 ================= -->
+    <section id="modulo-6" class="modulo" data-titulo="Módulo 6 — Testar, atualizar e publicar" hidden>
+      <header class="modulo__cab">
+        <p class="selo">Módulo 6 de 7</p>
+        <h2>Testar, atualizar e publicar</h2>
+        <p class="lead">Seu PWA existe, mas como saber se está bom? Como entregar uma versão nova sem quebrar nada? E como colocá-lo na internet para todo mundo usar?</p>
+      </header>
+
+      <div class="caixa caixa--objetivos">
+        <strong>O que você vai aprender neste módulo</strong>
+        <ul>
+          <li>Como medir a qualidade do app com o Lighthouse.</li>
+          <li>Como funciona a atualização de versão.</li>
+          <li>Como publicar de graça no GitHub Pages.</li>
+          <li>Como testar no seu próprio computador.</li>
+        </ul>
+      </div>
+
+      <h3>Como testar: o DevTools e o Lighthouse</h3>
+      <p>O <strong>DevTools</strong> (ferramentas do desenvolvedor) é o painel que já vem dentro do navegador. Para abri-lo, aperte <kbd>F12</kbd> ou clique com o botão direito e escolha <em>Inspecionar</em>. Duas abas valem ouro:</p>
+      <ul>
+        <li><strong>Application (Aplicativo):</strong> mostra o manifest, o Service Worker e o conteúdo do cache. É o "raio-x" do PWA.</li>
+        <li><strong>Lighthouse:</strong> um inspetor automático que analisa a página e dá notas de 0 a 100 em desempenho, acessibilidade, boas práticas e SEO (facilidade de ser encontrado em buscas), com dicas do que melhorar.</li>
+      </ul>
+      <ol class="passos">
+        <li>Abra o app no Chrome e aperte <kbd>F12</kbd>.</li>
+        <li>Clique na aba <strong>Lighthouse</strong>.</li>
+        <li>Marque as categorias e clique em <strong>Analisar</strong>.</li>
+        <li>Leia as sugestões. Cada uma explica o problema e como corrigir.</li>
+        <li>Depois, abra a aba <strong>Application</strong> e confira <em>Manifest</em>, <em>Service Workers</em> e <em>Cache Storage</em>.</li>
+      </ol>
+      <p class="nota">As versões mais novas do Lighthouse não têm mais uma categoria chamada "PWA"; as mesmas verificações aparecem na aba Application, na seção do manifest e da instalabilidade. Os nomes dos botões podem variar um pouco entre versões do navegador.</p>
+
+      <h3>Como funciona a atualização</h3>
+      <div class="caixa caixa--analogia">
+        <strong>🏠 Analogia: a nova edição do livro</strong>
+        Imagine que o seu aluno tem a 1ª edição de um livro. Você lançou a 2ª. O navegador percebe a mudança, baixa a nova edição em silêncio e a deixa na fila. Quem decide quando trocar? Você, no código: pode trocar na hora ou perguntar antes à pessoa, com um aviso.
+      </div>
+      <p>Tecnicamente, o navegador confere o <code>sw.js</code> a cada visita. Se o arquivo mudou, ele instala o novo Service Worker, que fica no estado <em>waiting</em> (esperando). O app então mostra o banner <strong>"Nova versão disponível"</strong>. Quando a pessoa clica em "Atualizar agora", o app manda uma mensagem ao novo Service Worker, que "fura a fila" (o <code>skipWaiting</code>) e assume o trabalho. Em seguida a página recarrega para usar os arquivos novos.</p>
+      <pre class="codigo"><code>// ===== No app.js (a página) =====
+// "Quando o navegador achar uma versão nova do Service Worker..."
+registro.addEventListener('updatefound', () =&gt; {
+  const novo = registro.installing;                // o novato que está sendo instalado
+  novo.addEventListener('statechange', () =&gt; {     // "...e quando ele mudar de etapa:"
+    // "installed" e já existe um antigo trabalhando = há versão nova esperando
+    if (novo.state === 'installed' &amp;&amp; navigator.serviceWorker.controller) {
+      mostrarBanner();                               // avisa a pessoa
+    }
+  });
+});
+
+// Quando a pessoa clica em "Atualizar agora", mandamos uma mensagem ao novato
+botaoAtualizar.onclick = () =&gt; registro.waiting.postMessage({ tipo: 'PULAR_ESPERA' });
+
+// Quando o novato assumir o controle, recarregamos a página
+navigator.serviceWorker.addEventListener('controllerchange', () =&gt; location.reload());
+
+// ===== No sw.js (o Service Worker) =====
+self.addEventListener('message', (e) =&gt; {
+  if (e.data.tipo === 'PULAR_ESPERA') self.skipWaiting();   // "furar a fila"
+});</code></pre>
+      <div class="caixa caixa--dica">
+        <strong>💡 Dica: como o navegador percebe a mudança?</strong>
+        Ele compara o <code>sw.js</code> do servidor com o que já tem, letra por letra. Por isso, mude a constante <code>VERSAO</code> dentro do <code>sw.js</code> toda vez que publicar mudanças: é o jeito mais simples de garantir que o aviso apareça.
+      </div>
+
+      <div id="lab-atualizacao" class="lab">
+        <h3>🧪 Laboratório: Ciclo de atualização</h3>
+        <p>Clique no botão para o app perguntar ao servidor se existe uma versão nova do <code>sw.js</code>:</p>
+        <div class="lab__acoes">
+          <button id="btn-checar-atualizacao" class="btn btn--primario">Procurar nova versão</button>
+        </div>
+        <p id="atualizacao-status" class="lab__saida" aria-live="polite">Versão do cache ativo: <strong id="versao-sw">—</strong></p>
+        <p><strong>Para ver o banner aparecer:</strong></p>
+        <ol class="passos">
+          <li>Com o app rodando no servidor local, abra o <code>sw.js</code> e mude a linha <code>const VERSAO = 'v1.1.0'</code> para <code>'v1.1.1'</code>.</li>
+          <li>Salve o arquivo.</li>
+          <li>Volte ao app e clique em "Procurar nova versão".</li>
+          <li>O banner "Nova versão disponível" surgirá no topo. Clique em "Atualizar agora" e veja a página recarregar com a versão nova.</li>
+        </ol>
+      </div>
+
+      <h3>Testando no seu computador</h3>
+      <p>Para testar o PWA antes de publicar, você precisa de um <strong>servidor local</strong>: um programa que "serve" os arquivos da sua pasta pelo endereço <code>localhost</code>.</p>
+      <div class="caixa caixa--atencao">
+        <strong>⚠️ Por que não basta dar dois cliques no index.html?</strong>
+        Quando você abre o arquivo direto, o endereço começa com <code>file://</code>, que não é HTTPS nem localhost. Aí o navegador bloqueia o Service Worker.
+      </div>
+      <p>Duas formas fáceis:</p>
+      <ul>
+        <li><strong>Com Python</strong> (se instalado): abra o terminal dentro da pasta do projeto e digite o comando abaixo. Depois acesse <code>http://localhost:8080</code> no navegador.</li>
+        <li><strong>Com o Visual Studio Code:</strong> instale a extensão gratuita <em>Live Server</em>, clique com o botão direito no <code>index.html</code> e escolha <em>Open with Live Server</em>.</li>
+      </ul>
+      <pre class="codigo"><code>python3 -m http.server 8080</code></pre>
+
+      <h3>Publicando de graça no GitHub Pages</h3>
+      <p><strong>Publicar</strong> é colocar seus arquivos em um servidor na internet. O <strong>GitHub Pages</strong> faz isso de graça e já entrega com HTTPS.</p>
+      <ol class="passos">
+        <li>Crie uma conta gratuita em <code>github.com</code>.</li>
+        <li>Clique no <strong>+</strong> no alto da página e em <strong>New repository</strong>. Dê um nome (ex.: <code>meu-pwa</code>), deixe como <strong>Public</strong> e crie.</li>
+        <li>Na página do repositório, clique em <strong>uploading an existing file</strong> e arraste os arquivos do seu projeto (mantendo as pastas, como a <code>icons</code>). Clique em <strong>Commit changes</strong>.</li>
+        <li>Vá em <strong>Settings → Pages</strong>. Em <em>Source</em> escolha <em>Deploy from a branch</em>, depois a branch <code>main</code> e a pasta <code>/ (root)</code>, e clique em <strong>Save</strong>.</li>
+        <li>Espere 1 a 2 minutos. O endereço do seu app aparece na própria página, no formato <code>https://seu-usuario.github.io/meu-pwa/</code>.</li>
+      </ol>
+      <div class="caixa caixa--dica">
+        <strong>💡 Por que os caminhos deste projeto são "relativos"?</strong>
+        Repare que escrevemos <code>./sw.js</code> e <code>icons/icon-192.png</code>, e não <code>/sw.js</code>. O endereço do GitHub Pages tem o nome do repositório no meio (<code>/meu-pwa/</code>), e caminhos relativos funcionam em qualquer pasta.
+      </div>
+
+      <div class="parabens" id="parabens" hidden>
+        <h3>🎉 Parabéns!</h3>
+        <p>Você concluiu todos os módulos. Agora é a hora de construir o seu próprio PWA. Se ainda não fez o último módulo, ele é o seu passo a passo.</p>
+      </div>
+
+      <div class="caixa caixa--resumo">
+        <strong>Resumo do módulo</strong>
+        <ul>
+          <li>O DevTools e o Lighthouse mostram o que está certo e o que melhorar.</li>
+          <li>Uma versão nova do <code>sw.js</code> fica esperando e, com a permissão da pessoa, assume via <code>skipWaiting</code>.</li>
+          <li>Teste em <code>localhost</code> e publique no GitHub Pages para ter HTTPS.</li>
+        </ul>
+      </div>
+
+      <footer class="modulo__rodape">
+        <a class="btn btn--fantasma" href="#modulo-5" data-nav="modulo-5">← Anterior</a>
+        <button class="btn btn--sucesso btn-concluir" data-modulo="modulo-6">Marcar módulo como concluído</button>
+        <a class="btn btn--primario" href="#modulo-7" data-nav="modulo-7">Próximo: Mão na massa →</a>
+      </footer>
+    </section>
+
+    <!-- ================= MÓDULO 7 ================= -->
+    <section id="modulo-7" class="modulo" data-titulo="Módulo 7 — Mão na massa: seu primeiro PWA" hidden>
+      <header class="modulo__cab">
+        <p class="selo">Módulo 7 de 7</p>
+        <h2>Mão na massa: seu primeiro PWA</h2>
+        <p class="lead">Hora de juntar tudo. Vamos construir, passo a passo, um PWA mínimo com apenas quatro arquivos e depois colocá-lo no ar.</p>
+      </header>
+
+      <div class="caixa caixa--objetivos">
+        <strong>O que você vai fazer neste módulo</strong>
+        <ul>
+          <li>Criar uma pasta com os arquivos do seu PWA.</li>
+          <li>Copiar e entender o código de cada arquivo.</li>
+          <li>Testar no seu computador e conferir no DevTools.</li>
+          <li>Resolver os problemas mais comuns.</li>
+        </ul>
+      </div>
+
+      <h3>Passo 1: crie a pasta do projeto</h3>
+      <p>No seu computador, crie uma pasta chamada <code>meu-pwa</code>. Abra-a no Visual Studio Code (ou outro editor de texto). Dentro dela vamos criar estes arquivos:</p>
+      <pre class="codigo"><code>meu-pwa/
+├── index.html
+├── manifest.webmanifest
+├── sw.js
+├── icon-192.png
+└── icon-512.png</code></pre>
+
+      <h3>Passo 2: o ícone</h3>
+      <p>Você precisa de duas imagens PNG quadradas, de 192×192 e 512×512 pixels. Para começar, baixe as deste curso (depois, troque pelas suas) e salve-as dentro da pasta <code>meu-pwa</code> com estes nomes:</p>
+      <p class="lab__acoes">
+        <a class="btn btn--secundario" href="icons/icon-192.png" download="icon-192.png">Baixar icon-192.png</a>
+        <a class="btn btn--secundario" href="icons/icon-512.png" download="icon-512.png">Baixar icon-512.png</a>
+      </p>
+
+      <h3>Passo 3: o index.html</h3>
+      <p>Crie o arquivo <code>index.html</code> e cole o código abaixo. É uma página simples, com as duas linhas que ligam o manifest e o Service Worker.</p>
+      <pre class="codigo"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="pt-BR"&gt;
+&lt;head&gt;
+  &lt;meta charset="utf-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;  &lt;!-- ajusta à tela do celular --&gt;
+  &lt;title&gt;Meu Primeiro PWA&lt;/title&gt;
+  &lt;meta name="theme-color" content="#0b57d0"&gt;                   &lt;!-- cor da barra do app --&gt;
+  &lt;link rel="manifest" href="manifest.webmanifest"&gt;             &lt;!-- liga a "ficha de cadastro" --&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Meu Primeiro PWA&lt;/h1&gt;
+  &lt;p&gt;Se você está lendo isto sem internet, funcionou! 🎉&lt;/p&gt;
+
+  &lt;script&gt;
+    // Contrata o Service Worker (se o navegador souber usar)
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js');
+    }
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+      <h3>Passo 4: o manifest.webmanifest</h3>
+      <p>Crie o arquivo e cole. Lembre-se: JSON não aceita comentários nem vírgula depois do último item.</p>
+      <pre class="codigo"><code>{
+  "name": "Meu Primeiro PWA",
+  "short_name": "Meu PWA",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0b57d0",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}</code></pre>
+
+      <h3>Passo 5: o sw.js (Service Worker)</h3>
+      <p>Esta é uma versão curta e simples: guarda os arquivos na instalação e depois responde com o cache primeiro (a estratégia Cache First do Módulo 4).</p>
+      <pre class="codigo"><code>// Nome do cache. Se mudar os arquivos, troque para v2, v3...
+const CACHE = 'meu-pwa-v1';
+
+// Lista dos arquivos que o app precisa para abrir offline
+const ARQUIVOS = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png'];
+
+// INSTALL: guarda os arquivos na "geladeira"
+self.addEventListener('install', (evento) =&gt; {
+  evento.waitUntil(caches.open(CACHE).then((cache) =&gt; cache.addAll(ARQUIVOS)));
+  self.skipWaiting();   // neste exemplo simples, já assume o trabalho
+});
+
+// ACTIVATE: joga fora caches de versões antigas
+self.addEventListener('activate', (evento) =&gt; {
+  evento.waitUntil(
+    caches.keys().then((nomes) =&gt;
+      Promise.all(nomes.filter((nome) =&gt; nome !== CACHE).map((nome) =&gt; caches.delete(nome)))
+    )
+  );
+  self.clients.claim();   // assume as abas que já estão abertas
+});
+
+// FETCH: usa o cache primeiro; se não achar, busca na internet
+self.addEventListener('fetch', (evento) =&gt; {
+  evento.respondWith(
+    caches.match(evento.request).then((guardado) =&gt; guardado || fetch(evento.request))
+  );
+});</code></pre>
+
+      <h3>Passo 6: teste no computador</h3>
+      <ol class="passos">
+        <li>Abra o terminal dentro da pasta <code>meu-pwa</code> e rode <code>python3 -m http.server 8080</code> (ou use o Live Server do VS Code).</li>
+        <li>Acesse <code>http://localhost:8080</code> no Chrome.</li>
+        <li>Aperte <kbd>F12</kbd> e abra a aba <strong>Application</strong>. Em <em>Manifest</em>, confira se não há erros. Em <em>Service Workers</em>, o status deve ser "activated and is running".</li>
+        <li>Em <em>Cache Storage</em>, veja os cinco arquivos guardados.</li>
+        <li>Volte à aba <strong>Application → Service Workers</strong>, marque <strong>Offline</strong> e recarregue a página. Ela continua funcionando. 🎉</li>
+        <li>Procure o ícone de instalar na barra de endereços e instale o seu app.</li>
+      </ol>
+
+      <h3>Deu errado? Veja aqui</h3>
+      <div class="tabela-wrap">
+        <table>
+          <thead><tr><th>O que acontece</th><th>Causa mais provável</th><th>O que fazer</th></tr></thead>
+          <tbody>
+            <tr><td>O Service Worker não aparece no DevTools</td><td>Você abriu o arquivo direto (<code>file://</code>)</td><td>Use o servidor local (<code>localhost</code>).</td></tr>
+            <tr><td>Erro vermelho no console ao registrar</td><td>Caminho errado para o <code>sw.js</code></td><td>Confira se está na mesma pasta do <code>index.html</code> e se o nome está igual.</td></tr>
+            <tr><td>O manifest dá erro</td><td>Vírgula sobrando, aspas faltando ou comentário no JSON</td><td>Corrija o JSON; um verificador online de JSON ajuda a achar o erro.</td></tr>
+            <tr><td>O botão/ícone de instalar não aparece</td><td>Faltam ícones, o manifest tem erro ou o app já está instalado</td><td>Veja a aba Application → Manifest, que lista o que está faltando.</td></tr>
+            <tr><td>Mudei o código, mas vejo a versão antiga</td><td>O cache antigo ainda está sendo usado</td><td>Troque a versão em <code>CACHE</code> (v1 → v2). No DevTools, marque <em>Update on reload</em> ou use <em>Clear site data</em>.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Passo 7: publique</h3>
+      <p>Quando estiver tudo certo, volte ao <a href="#modulo-6">Módulo 6</a> e siga os passos do GitHub Pages. Depois, abra o endereço no celular e instale o seu PWA. Você acabou de publicar um aplicativo.</p>
+
+      <h3>Para continuar estudando</h3>
+      <ul>
+        <li>Adicione mais páginas ao seu PWA e inclua os arquivos novos na lista <code>ARQUIVOS</code>.</li>
+        <li>Troque o Cache First pelas outras estratégias do Módulo 4 e observe o que muda.</li>
+        <li>Faça um app simples que use <code>localStorage</code> (lista de tarefas, por exemplo).</li>
+        <li>Rode o Lighthouse no seu app e tente melhorar as notas.</li>
+      </ul>
+
+      <div class="caixa caixa--resumo">
+        <strong>Resumo do módulo</strong>
+        <ul>
+          <li>Um PWA mínimo tem quatro tipos de arquivo: HTML, manifest, Service Worker e ícones.</li>
+          <li>Teste sempre em <code>localhost</code> ou HTTPS, e confira no DevTools (aba Application).</li>
+          <li>Quando mudar arquivos, mude também a versão do cache.</li>
+        </ul>
+      </div>
+
+      <footer class="modulo__rodape">
+        <a class="btn btn--fantasma" href="#modulo-6" data-nav="modulo-6">← Anterior</a>
+        <button class="btn btn--sucesso btn-concluir" data-modulo="modulo-7">Marcar módulo como concluído</button>
+        <a class="btn btn--primario" href="#glossario" data-nav="glossario">Glossário →</a>
+      </footer>
+    </section>
+
+    <!-- ================= GLOSSÁRIO ================= -->
+    <section id="glossario" class="modulo" data-titulo="Glossário" hidden>
+      <header class="modulo__cab">
+        <p class="selo">Apoio</p>
+        <h2>Glossário</h2>
+        <p class="lead">Palavras que aparecem no curso, explicadas de forma simples. Volte aqui sempre que precisar.</p>
+      </header>
+
+      <dl class="definicoes glossario">
+        <dt>API</dt>
+        <dd>Conjunto de comandos prontos que um programa oferece para outro usar. Exemplo: a API de compartilhamento do navegador.</dd>
+        <dt>App Shell</dt>
+        <dd>A "casca" do aplicativo: os arquivos mínimos (HTML, CSS, JavaScript, ícones) que fazem o app abrir. É o que guardamos no cache logo na instalação.</dd>
+        <dt>Cache</dt>
+        <dd>Cópia guardada de algo para não precisar buscar de novo. Deixa tudo mais rápido e permite usar offline.</dd>
+        <dt>CacheStorage</dt>
+        <dd>O armazenamento do navegador destinado aos caches usados pelo Service Worker.</dd>
+        <dt>Cliente</dt>
+        <dd>Quem faz o pedido. Na web, é o navegador.</dd>
+        <dt>Comentário</dt>
+        <dd>Anotação no código para pessoas lerem, que o computador ignora.</dd>
+        <dt>CSS</dt>
+        <dd>Linguagem que define a aparência da página: cores, tamanhos e posições.</dd>
+        <dt>DevTools</dt>
+        <dd>Painel de ferramentas do desenvolvedor, que já vem no navegador (tecla F12).</dd>
+        <dt>Domínio</dt>
+        <dd>O "nome" de um site, como <code>exemplo.com.br</code>.</dd>
+        <dt>Evento</dt>
+        <dd>Algo que acontece (clique, internet que cai, instalação possível) e sobre o qual o código pode ser avisado.</dd>
+        <dt>Extensão (de arquivo)</dt>
+        <dd>O final do nome do arquivo, depois do ponto (<code>.html</code>, <code>.png</code>), que indica o tipo.</dd>
+        <dt>HTML</dt>
+        <dd>Linguagem de marcação que define a estrutura e o conteúdo de uma página.</dd>
+        <dt>HTTP / HTTPS</dt>
+        <dd>A "língua" em que navegador e servidor conversam. O HTTPS é a versão protegida (criptografada), com cadeado.</dd>
+        <dt>IndexedDB</dt>
+        <dd>Banco de dados dentro do navegador, para guardar muitas informações organizadas.</dd>
+        <dt>Instalar (um PWA)</dt>
+        <dd>Colocar o ícone do app na tela inicial para abri-lo como um aplicativo comum.</dd>
+        <dt>JavaScript</dt>
+        <dd>Linguagem de programação que dá comportamento à página: reagir a cliques, guardar dados, conversar com o Service Worker.</dd>
+        <dt>JSON</dt>
+        <dd>Formato de texto para organizar informações em pares "nome: valor". O manifest usa JSON.</dd>
+        <dt>Lighthouse</dt>
+        <dd>Ferramenta do Chrome que analisa uma página e dá notas de qualidade com sugestões.</dd>
+        <dt>localhost</dt>
+        <dd>O endereço do seu próprio computador, usado para testar projetos. O navegador o trata como seguro.</dd>
+        <dt>localStorage</dt>
+        <dd>Pequeno armazenamento de texto do navegador, para guardar preferências simples.</dd>
+        <dt>Manifest</dt>
+        <dd>Arquivo JSON com nome, ícones, cores e modo de exibição do app. A "ficha de cadastro".</dd>
+        <dt>Maskable</dt>
+        <dd>Ícone feito com margem de segurança, para o celular poder recortá-lo em círculo ou quadrado sem cortar o desenho.</dd>
+        <dt>Navegador</dt>
+        <dd>Programa para acessar sites: Chrome, Edge, Firefox, Safari.</dd>
+        <dt>Notificação</dt>
+        <dd>Aviso que aparece fora do app, no canto da tela. Exige permissão.</dd>
+        <dt>Offline / Online</dt>
+        <dd>Sem internet / com internet.</dd>
+        <dt>Permissão</dt>
+        <dd>Autorização que a pessoa dá (ou nega) para o app usar um recurso, como notificações.</dd>
+        <dt>Publicar (deploy)</dt>
+        <dd>Colocar os arquivos do projeto em um servidor para que todos possam acessar.</dd>
+        <dt>PWA</dt>
+        <dd>Progressive Web App (Aplicativo Web Progressivo): site que pode ser instalado, funciona offline e se comporta como app.</dd>
+        <dt>Requisição e resposta</dt>
+        <dd>O pedido que o navegador faz ao servidor e o que o servidor devolve.</dd>
+        <dt>Scope (escopo)</dt>
+        <dd>A área do site que pertence ao app. Links fora dela abrem no navegador.</dd>
+        <dt>Servidor</dt>
+        <dd>Computador sempre ligado que guarda os arquivos de um site e os entrega a quem pedir.</dd>
+        <dt>Service Worker</dt>
+        <dd>Script que roda em segundo plano, entre o app e a internet, decidindo o que vem do cache e o que vem da rede.</dd>
+        <dt>skipWaiting</dt>
+        <dd>Comando que faz um Service Worker novo assumir o trabalho sem esperar na fila.</dd>
+        <dt>Tag</dt>
+        <dd>Marcação do HTML entre <code>&lt;</code> e <code>&gt;</code>, como <code>&lt;p&gt;</code> (parágrafo).</dd>
+        <dt>URL</dt>
+        <dd>O endereço completo de uma página, como <code>https://exemplo.com.br/aula.html</code>.</dd>
+        <dt>Web Share API</dt>
+        <dd>Recurso que abre a janela de compartilhamento do aparelho.</dd>
+      </dl>
+
+      <footer class="modulo__rodape">
+        <a class="btn btn--fantasma" href="#modulo-7" data-nav="modulo-7">← Voltar ao Módulo 7</a>
         <span></span>
+        <a class="btn btn--primario" href="#modulo-1" data-nav="modulo-1">Ir ao início</a>
       </footer>
     </section>
 

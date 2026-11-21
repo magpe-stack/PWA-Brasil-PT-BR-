@@ -282,6 +282,47 @@ input[type="text"], select {
 
 .modulo__rodape { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .6rem; margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--borda); }
 
+/* ---------- 10b) Recursos didáticos: caixas, editor, glossário ---------- */
+.caixa {
+  margin: 1.1rem 0; padding: .8rem 1rem;
+  border-radius: var(--raio); border: 1px solid var(--borda); border-left-width: 6px;
+  background: var(--bg-suave); color: var(--texto);
+}
+.caixa > strong { display: block; margin-bottom: .3rem; }
+.caixa ul { margin: .3rem 0 0; padding-left: 1.2rem; }
+.caixa li { margin: .2rem 0; }
+.caixa--objetivos { border-left-color: var(--primaria); background: color-mix(in srgb, var(--primaria) 8%, var(--bg)); }
+.caixa--analogia { border-left-color: #8e44ad; background: color-mix(in srgb, #8e44ad 9%, var(--bg)); }
+.caixa--dica { border-left-color: var(--sucesso); background: color-mix(in srgb, var(--sucesso) 9%, var(--bg)); }
+.caixa--atencao { border-left-color: #e08a00; background: var(--aviso-bg); color: var(--aviso-texto); }
+.caixa--atencao code { color: var(--texto); }
+.caixa--resumo { border-left-color: var(--sucesso); background: var(--bg-suave); margin-top: 2rem; }
+
+.checklist label > span { display: block; }
+.checklist label small { display: block; color: var(--texto-suave); font-size: .82rem; line-height: 1.35; }
+
+.editor-duplo { display: grid; gap: .8rem; grid-template-columns: 1fr; margin: .8rem 0; }
+.editor-coluna { display: flex; flex-direction: column; gap: .3rem; font-weight: 600; font-size: .9rem; min-width: 0; }
+.editor-rotulo { font-weight: 600; font-size: .9rem; }
+#editor-html {
+  font-family: var(--fonte-mono); font-size: .85rem; line-height: 1.5; tab-size: 2;
+  min-height: 220px; padding: .7rem; resize: vertical;
+  border: 1px solid var(--borda); border-radius: 10px; background: var(--codigo-bg); color: var(--codigo-texto);
+}
+#preview-html { width: 100%; min-height: 220px; height: 100%; border: 1px solid var(--borda); border-radius: 10px; background: #fff; }
+
+.codigo--copiavel { position: relative; padding-top: 2.6rem; }
+.copiar {
+  position: absolute; top: .5rem; right: .5rem;
+  font: inherit; font-size: .78rem; font-weight: 600; min-height: 32px; padding: .15rem .8rem;
+  border-radius: 999px; border: 1px solid #94a3b8; background: #1e293b; color: #e2e8f0; cursor: pointer;
+}
+.copiar:hover { background: #334155; }
+
+.glossario dt { padding-top: .6rem; border-top: 1px solid var(--borda); color: var(--primaria); }
+.glossario dt:first-child { border-top: 0; }
+.cartao h4 small { font-weight: 500; color: var(--texto-suave); }
+
 /* ---------- 11) Toast ---------- */
 .toast {
   position: fixed; left: 50%; bottom: calc(1rem + env(safe-area-inset-bottom)); transform: translateX(-50%);
@@ -291,6 +332,7 @@ input[type="text"], select {
 
 /* ---------- 12) Responsividade (mobile-first: aumenta a partir daqui) ---------- */
 @media (min-width: 640px) {
+  .editor-duplo { grid-template-columns: 1fr 1fr; }
   .topo__marca small { display: inline; }
   .lista-cards, .grade-3 { grid-template-columns: repeat(3, 1fr); }
   .info-grade { grid-template-columns: repeat(2, 1fr); }

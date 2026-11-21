@@ -3,6 +3,20 @@
 PWA educacional em português que ensina a criar e publicar PWAs, implementando ao vivo tudo o que ensina.
 HTML + CSS + JavaScript puros, sem frameworks e sem Workbox.
 
+## Conteúdo do curso (para quem nunca programou)
+
+1. Como a web funciona (internet, servidor, URL, HTTPS, HTML/CSS/JS) + editor de HTML ao vivo
+2. O que é um PWA + checklist de prontidão
+3. Manifest e instalação (inclui introdução a JSON)
+4. Service Worker e cache (analogias, ciclo de vida, 3 estratégias)
+5. Recursos do aparelho (armazenamento, Web Share, notificações)
+6. Testar, atualizar e publicar (DevTools, Lighthouse, GitHub Pages)
+7. Mão na massa: criar o seu primeiro PWA, passo a passo
++ Glossário
+
+Para adicionar um módulo novo: copie uma `<section class="modulo">` do `index.html`,
+inclua o botão `.btn-concluir` e um link no menu. O progresso se ajusta sozinho.
+
 ## Estrutura de pastas
 
 ```
