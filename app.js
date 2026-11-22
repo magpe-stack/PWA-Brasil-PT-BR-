@@ -77,6 +77,14 @@ function iniciarTema() {
  * ------------------------------------------------------------------- */
 function iniciarSplash() {
   const splash = $('#splash');
+  // Depois de abrir um arquivo de progresso a página recarrega; não faz sentido repetir a abertura.
+  try {
+    if (sessionStorage.getItem('pwa-brasil:pular-splash')) {
+      sessionStorage.removeItem('pwa-brasil:pular-splash');
+      splash.remove();
+      return;
+    }
+  } catch (e) { /* ignora */ }
   setTimeout(() => {
     splash.classList.add('splash--saindo');
     // Remove do DOM depois da animação de saída.
@@ -951,6 +959,210 @@ function iniciarCertificado() {
 }
 
 /* ---------------------------------------------------------------------
+ * 11d) SALVAR E ABRIR O PROGRESSO EM ARQUIVO
+ * Usa a File System Access API (showSaveFilePicker / showOpenFilePicker) quando
+ * existe (Chrome e Edge no computador). Nos outros navegadores, usa o download
+ * comum e o seletor de arquivo <input type="file">, que funcionam em qualquer lugar.
+ * ------------------------------------------------------------------- */
+const NOME_APP = 'PWA Brasil (PT-BR)';
+const FORMATO_ARQUIVO = 1;
+const TAMANHO_MAXIMO_ARQUIVO = 200 * 1024; // 200 KB: o arquivo real tem poucos KB
+const CHAVES_PROGRESSO = ['progresso-v2', 'quiz-v1', 'checklist', 'apelido', 'nome-certificado', 'tema'];
+const TIPOS_ARQUIVO = [{ description: 'Progresso do PWA Brasil', accept: { 'application/json': ['.json'] } }];
+
+// Junta o que está salvo neste navegador (textos exatamente como estão no localStorage).
+function coletarProgresso() {
+  const dados = {};
+  CHAVES_PROGRESSO.forEach((chave) => {
+    try {
+      const valor = localStorage.getItem('pwa-brasil:' + chave);
+      if (valor !== null) dados[chave] = valor;
+    } catch (e) { /* ignora */ }
+  });
+  return { app: NOME_APP, formato: FORMATO_ARQUIVO, salvoEm: new Date().toISOString(), dados };
+}
+
+// Nunca confiamos no conteúdo do arquivo: cada campo é conferido e só o que for válido é aproveitado.
+function validarProgresso(obj) {
+  if (!obj || typeof obj !== 'object' || Array.isArray(obj)) return { erro: 'O arquivo não tem o formato esperado.' };
+  if (obj.app !== NOME_APP) return { erro: 'Este arquivo não é do ' + NOME_APP + '.' };
+  if (obj.formato !== FORMATO_ARQUIVO) return { erro: 'Este arquivo foi salvo por uma versão diferente do curso.' };
+  if (!obj.dados || typeof obj.dados !== 'object' || Array.isArray(obj.dados)) return { erro: 'O arquivo está sem dados de progresso.' };
+
+  const modulos = $$('.btn-concluir').map((b) => b.dataset.modulo);
+  const itensChecklist = $$('#checklist input[data-item]').map((c) => c.dataset.item);
+  const lerJSON = (chave) => { try { return JSON.parse(obj.dados[chave]); } catch (e) { return undefined; } };
+  const limpo = {};
+
+  const feitos = lerJSON('progresso-v2');
+  if (Array.isArray(feitos)) limpo.concluidos = [...new Set(feitos.filter((id) => modulos.includes(id)))];
+
+  const notas = lerJSON('quiz-v1');
+  if (notas && typeof notas === 'object' && !Array.isArray(notas)) {
+    limpo.quiz = {};
+    modulos.forEach((id) => {
+      const n = notas[id];
+      if (n && Number.isFinite(n.melhor) && n.melhor >= 0 && n.melhor <= 100) {
+        const tent = Number.isFinite(n.tentativas) ? Math.min(Math.max(Math.round(n.tentativas), 1), 9999) : 1;
+        limpo.quiz[id] = { melhor: Math.round(n.melhor), tentativas: tent };
+      }
+    });
+  }
+
+  const check = lerJSON('checklist');
+  if (check && typeof check === 'object' && !Array.isArray(check)) {
+    limpo.checklist = {};
+    itensChecklist.forEach((item) => { if (typeof check[item] === 'boolean') limpo.checklist[item] = check[item]; });
+  }
+
+  const semControle = (t, max) => t.replace(/[\u0000-\u001f\u007f<>]/g, '').trim().slice(0, max);
+  const apelido = lerJSON('apelido');
+  if (typeof apelido === 'string') limpo.apelido = semControle(apelido, 30);
+  const nome = lerJSON('nome-certificado');
+  if (typeof nome === 'string') limpo['nome-certificado'] = semControle(nome, 60);
+  if (obj.dados.tema === 'claro' || obj.dados.tema === 'escuro') limpo.tema = obj.dados.tema;
+
+  const aproveitavel = (limpo.concluidos && limpo.concluidos.length) || (limpo.quiz && Object.keys(limpo.quiz).length)
+    || (limpo.checklist && Object.keys(limpo.checklist).length) || limpo.apelido || limpo['nome-certificado'];
+  if (!aproveitavel) return { erro: 'O arquivo não contém nenhum progresso aproveitável.' };
+  return { limpo };
+}
+
+function resumoDoProgresso(concluidos, quiz) {
+  const aprovados = Object.values(quiz || {}).filter((n) => n.melhor >= NOTA_CERTIFICADO).length;
+  return `${(concluidos || []).length} módulo(s) concluído(s) e ${aprovados} quiz(zes) aprovado(s)`;
+}
+
+function desenharResumoProgresso() {
+  const salvoEm = Armazenamento.ler('salvo-em', null);
+  const quando = salvoEm ? new Date(salvoEm).toLocaleString('pt-BR', { dateStyle: 'long', timeStyle: 'short' }) : null;
+  $('#prog-resumo').textContent = 'Neste aparelho: ' + resumoDoProgresso(concluidos, lerNotasQuiz()) + '. ' +
+    (quando ? 'Último arquivo salvo em ' + quando + '.' : 'Você ainda não salvou nenhum arquivo.');
+}
+
+function baixarArquivo(conteudo, nome) {
+  const url = URL.createObjectURL(new Blob([conteudo], { type: 'application/json' }));
+  const a = document.createElement('a');
+  a.href = url; a.download = nome;
+  document.body.append(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+}
+
+async function salvarProgresso() {
+  const status = $('#prog-status');
+  const conteudo = JSON.stringify(coletarProgresso(), null, 2);
+  const nome = `progresso-pwa-brasil-${new Date().toISOString().slice(0, 10)}.json`;
+  let salvouComo = null;
+
+  if ('showSaveFilePicker' in window) {
+    try {
+      const alvo = await window.showSaveFilePicker({ suggestedName: nome, types: TIPOS_ARQUIVO });
+      const escrita = await alvo.createWritable();
+      await escrita.write(conteudo);
+      await escrita.close();
+      salvouComo = `Arquivo "${alvo.name}" salvo no local que você escolheu.`;
+    } catch (erro) {
+      if (erro.name === 'AbortError') return dizer(status, 'Salvamento cancelado.');
+      // Qualquer outro problema (ex.: janela embutida): usa o download comum.
+    }
+  }
+  if (!salvouComo) {
+    baixarArquivo(conteudo, nome);
+    salvouComo = `Arquivo "${nome}" baixado. Procure na pasta de downloads do seu aparelho e guarde onde quiser.`;
+  }
+  Armazenamento.gravar('salvo-em', new Date().toISOString());
+  dizer(status, salvouComo, 'ok');
+  desenharResumoProgresso();
+}
+
+async function processarArquivoProgresso(arquivo) {
+  const status = $('#prog-status');
+  if (!arquivo) return;
+  if (arquivo.size > TAMANHO_MAXIMO_ARQUIVO) return dizer(status, 'O arquivo é grande demais para ser um progresso deste curso.', 'erro');
+
+  let obj;
+  try { obj = JSON.parse(await arquivo.text()); }
+  catch (e) { return dizer(status, 'Não consegui ler o arquivo: ele não é um JSON válido.', 'erro'); }
+
+  const { limpo, erro } = validarProgresso(obj);
+  if (erro) return dizer(status, erro, 'erro');
+
+  const somado = {
+    concluidos: [...new Set([...concluidos, ...(limpo.concluidos || [])])],
+    quiz: { ...lerNotasQuiz() }
+  };
+  Object.entries(limpo.quiz || {}).forEach(([id, n]) => {
+    const atual = somado.quiz[id];
+    somado.quiz[id] = atual ? { melhor: Math.max(atual.melhor, n.melhor), tentativas: Math.max(atual.tentativas, n.tentativas) } : n;
+  });
+
+  const ok = confirm(
+    `Arquivo de ${obj.salvoEm ? new Date(obj.salvoEm).toLocaleDateString('pt-BR') : 'data desconhecida'}.\n\n` +
+    `No arquivo: ${resumoDoProgresso(limpo.concluidos, limpo.quiz)}.\n` +
+    `Depois de somar com este aparelho: ${resumoDoProgresso(somado.concluidos, somado.quiz)}.\n\n` +
+    'Nada será apagado. A página vai recarregar. Continuar?');
+  if (!ok) return dizer(status, 'Abertura cancelada. Nada foi alterado.');
+
+  const gravarJSON = (chave, valor) => localStorage.setItem('pwa-brasil:' + chave, JSON.stringify(valor));
+  try {
+    gravarJSON('progresso-v2', somado.concluidos);
+    gravarJSON('quiz-v1', somado.quiz);
+    if (limpo.checklist) gravarJSON('checklist', { ...Armazenamento.ler('checklist', {}), ...limpo.checklist });
+    if (limpo.apelido) gravarJSON('apelido', limpo.apelido);
+    if (limpo['nome-certificado']) gravarJSON('nome-certificado', limpo['nome-certificado']);
+    if (limpo.tema) localStorage.setItem('pwa-brasil:tema', limpo.tema);
+    sessionStorage.setItem('pwa-brasil:pular-splash', '1');
+    sessionStorage.setItem('pwa-brasil:msg-importacao', 'Progresso aberto com sucesso: ' + resumoDoProgresso(somado.concluidos, somado.quiz) + '.');
+  } catch (e) {
+    return dizer(status, 'Não foi possível gravar o progresso neste navegador (armazenamento bloqueado ou cheio).', 'erro');
+  }
+  location.hash = '#progresso';
+  location.reload();
+}
+
+async function abrirProgresso() {
+  if ('showOpenFilePicker' in window) {
+    try {
+      const [alvo] = await window.showOpenFilePicker({ types: TIPOS_ARQUIVO, multiple: false });
+      return processarArquivoProgresso(await alvo.getFile());
+    } catch (erro) {
+      if (erro.name === 'AbortError') return dizer($('#prog-status'), 'Abertura cancelada.');
+      // Outro problema: cai para o seletor comum.
+    }
+  }
+  $('#prog-arquivo').click();
+}
+
+function iniciarProgressoEmArquivo() {
+  const metodo = $('#prog-metodo');
+  metodo.textContent = ('showSaveFilePicker' in window)
+    ? 'Seu navegador permite escolher a pasta e o nome do arquivo ao salvar.'
+    : 'Seu navegador não deixa o site escolher a pasta: o arquivo será baixado para a pasta de downloads (você pode movê-lo depois). Para abrir, escolha o arquivo na janela que aparecer.';
+
+  $('#btn-prog-salvar').addEventListener('click', salvarProgresso);
+  $('#btn-prog-abrir').addEventListener('click', abrirProgresso);
+  $('#prog-arquivo').addEventListener('change', (e) => {
+    const arquivo = e.target.files && e.target.files[0];
+    e.target.value = ''; // permite escolher o mesmo arquivo de novo
+    processarArquivoProgresso(arquivo);
+  });
+
+  desenharResumoProgresso();
+  document.addEventListener('quiz:aprovado', desenharResumoProgresso);
+  $$('.btn-concluir').forEach((b) => b.addEventListener('click', desenharResumoProgresso));
+
+  // Mensagem deixada pela abertura anterior (a página recarregou)
+  try {
+    const msg = sessionStorage.getItem('pwa-brasil:msg-importacao');
+    if (msg) {
+      sessionStorage.removeItem('pwa-brasil:msg-importacao');
+      dizer($('#prog-status'), msg, 'ok');
+      toast('Progresso aberto! 🎉');
+    }
+  } catch (e) { /* ignora */ }
+}
+
+/* ---------------------------------------------------------------------
  * 12) INICIALIZAÇÃO
  * ------------------------------------------------------------------- */
 document.addEventListener('DOMContentLoaded', () => {
@@ -967,6 +1179,7 @@ document.addEventListener('DOMContentLoaded', () => {
   iniciarLaboratoriosHTML();
   iniciarBotoesCopiar();
   iniciarCertificado();
+  iniciarProgressoEmArquivo();
   iniciarNavegacao();
   iniciarServiceWorker();
 });

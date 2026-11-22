@@ -21,6 +21,10 @@ a primeira opção de cada pergunta é a correta, e a ordem é embaralhada na te
 Ao ser aprovado nos 7 quizzes, o aluno pode emitir um **certificado de conclusão** (imagem PNG desenhada
 em `<canvas>`, sem enviar dados a lugar nenhum). Ele é de participação, sem validade oficial.
 
+O menu **Salvar / abrir progresso** grava o avanço em um arquivo `.json` (com seletor de pasta no Chrome/Edge do
+computador; nos demais navegadores, por download) e permite abri-lo depois, inclusive em outro aparelho. Ao abrir,
+o app **soma** ao que já existe (nada é apagado), confere cada campo do arquivo e recusa arquivos inválidos.
+
 Para adicionar um módulo novo: copie uma `<section class="modulo">` do `index.html`,
 inclua o botão `.btn-concluir` e um link no menu. O progresso se ajusta sozinho.
 

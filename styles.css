@@ -171,6 +171,7 @@ kbd { box-shadow: 0 1px 0 var(--borda); }
 .menu--labs a { font-size: .92rem; }
 
 .progresso { margin-top: 1rem; }
+.progresso small { display: block; margin-top: .3rem; }
 .progresso__trilho { height: 8px; background: var(--bg-suave); border: 1px solid var(--borda); border-radius: 999px; overflow: hidden; }
 .progresso__barra { height: 100%; background: var(--sucesso); transition: width .4s ease; }
 

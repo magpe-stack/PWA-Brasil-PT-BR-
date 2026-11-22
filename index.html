@@ -89,6 +89,7 @@
     <div class="progresso" aria-label="Seu progresso">
       <div class="progresso__trilho"><div id="progresso-barra" class="progresso__barra" style="width:0%"></div></div>
       <small id="progresso-texto">0 módulos concluídos</small>
+      <small><a href="#progresso">💾 Salvar ou abrir meu progresso</a></small>
     </div>
 
     <nav>
@@ -114,6 +115,7 @@
       </ul>
       <p class="drawer__titulo">Apoio</p>
       <ul class="menu">
+        <li><a href="#progresso" data-modulo="progresso"><span class="menu__num" aria-hidden="true">💾</span> Salvar / abrir progresso</a></li>
         <li><a href="#certificado" data-modulo="certificado"><span class="menu__num" aria-hidden="true">🎓</span> Certificado</a></li>
         <li><a href="#glossario" data-modulo="glossario"><span class="menu__num" aria-hidden="true">Aa</span> Glossário</a></li>
       </ul>
@@ -912,7 +914,7 @@ self.addEventListener('message', (e) =&gt; {
         <p id="atualizacao-status" class="lab__saida" aria-live="polite">Versão do cache ativo: <strong id="versao-sw">—</strong></p>
         <p><strong>Para ver o banner aparecer:</strong></p>
         <ol class="passos">
-          <li>Com o app rodando no servidor local, abra o <code>sw.js</code> e mude a linha <code>const VERSAO = 'v1.4.0'</code> para <code>'v1.4.1'</code>.</li>
+          <li>Com o app rodando no servidor local, abra o <code>sw.js</code> e mude a linha <code>const VERSAO = 'v1.5.0'</code> para <code>'v1.5.1'</code>.</li>
           <li>Salve o arquivo.</li>
           <li>Volte ao app e clique em "Procurar nova versão".</li>
           <li>O banner "Nova versão disponível" surgirá no topo. Clique em "Atualizar agora" e veja a página recarregar com a versão nova.</li>
@@ -1164,6 +1166,57 @@ self.addEventListener('fetch', (evento) =&gt; {
 
       <footer class="modulo__rodape">
         <a class="btn btn--fantasma" href="#modulo-7" data-nav="modulo-7">← Voltar ao Módulo 7</a>
+        <span></span>
+        <a class="btn btn--primario" href="#glossario" data-nav="glossario">Glossário →</a>
+      </footer>
+    </section>
+
+    <!-- ================= PROGRESSO (SALVAR / ABRIR) ================= -->
+    <section id="progresso" class="modulo" data-titulo="Salvar e abrir o progresso" hidden>
+      <header class="modulo__cab">
+        <p class="selo">Apoio</p>
+        <h2>Salvar e abrir o seu progresso</h2>
+        <p class="lead">Guarde o seu avanço em um arquivo, no lugar que você escolher, e continue o curso depois, até em outro aparelho.</p>
+      </header>
+
+      <h3>Por que isso existe?</h3>
+      <p>Neste curso, o seu progresso (módulos concluídos, notas dos quizzes, nome do certificado) fica guardado <strong>dentro do navegador</strong>, no <code>localStorage</code> que você viu no Módulo 5. É prático, mas tem um limite: esse armazenamento pertence <em>àquele navegador, naquele aparelho</em>. Se você limpar os dados do site, trocar de celular ou usar outro computador, o progresso não vai junto.</p>
+      <div class="caixa caixa--analogia">
+        <strong>🏠 Analogia: o boletim em papel</strong>
+        O seu avanço é como as notas anotadas no caderno da escola. Salvar em arquivo é tirar uma cópia do boletim e guardá-la na gaveta que você quiser. Se o caderno se perder, você mostra a cópia e continua de onde parou.
+      </div>
+
+      <h3>O que vai dentro do arquivo?</h3>
+      <ul>
+        <li>Quais módulos você concluiu.</li>
+        <li>A melhor nota de cada quiz.</li>
+        <li>As marcações do checklist, o apelido, o nome do certificado e o tema (claro ou escuro).</li>
+      </ul>
+      <p>É um arquivo de texto no formato JSON (você aprendeu no Módulo 3), com extensão <code>.json</code>. Você pode abri-lo no Bloco de Notas para ver.</p>
+
+      <div id="lab-progresso" class="lab">
+        <h3>💾 Salvar e abrir</h3>
+        <p id="prog-resumo" class="lab__saida" aria-live="polite"></p>
+        <div class="lab__acoes">
+          <button id="btn-prog-salvar" class="btn btn--primario">Salvar como…</button>
+          <button id="btn-prog-abrir" class="btn btn--secundario">Abrir arquivo…</button>
+        </div>
+        <input id="prog-arquivo" type="file" accept=".json,application/json" hidden>
+        <p id="prog-status" class="lab__saida" aria-live="polite"></p>
+        <p id="prog-metodo" class="nota"></p>
+      </div>
+
+      <div class="caixa caixa--dica">
+        <strong>💡 O que acontece ao abrir um arquivo?</strong>
+        O app <strong>soma</strong> o arquivo ao que você já tem neste aparelho, e nada é apagado: os módulos concluídos dos dois lados ficam concluídos, e vale a melhor nota de cada quiz. Antes de qualquer mudança, o app mostra um resumo e pede a sua confirmação. Arquivos que não sejam deste curso, ou que estejam danificados, são recusados.
+      </div>
+      <div class="caixa caixa--atencao">
+        <strong>⚠️ Cuidado com o arquivo</strong>
+        Se você informou seu nome para o certificado, ele fica escrito no arquivo, em texto legível. Guarde-o em um lugar seguro e não o envie a quem você não conhece.
+      </div>
+
+      <footer class="modulo__rodape">
+        <a class="btn btn--fantasma" href="#certificado" data-nav="certificado">← Certificado</a>
         <span></span>
         <a class="btn btn--primario" href="#glossario" data-nav="glossario">Glossário →</a>
       </footer>
