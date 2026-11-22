@@ -9,8 +9,8 @@
 
   <!-- Liga a página ao Web App Manifest (Módulo 3) -->
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="PWA Brasil">
@@ -479,8 +479,8 @@ botao.addEventListener('click', () =&gt; {
   "scope": "./",
   "display": "standalone",
   "icons": [
-    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "icons/icon-maskable-512.png", "sizes": "512x512",
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512",
       "type": "image/png", "purpose": "maskable" }
   ]
 }</code></pre>
@@ -911,7 +911,7 @@ self.addEventListener('message', (e) =&gt; {
         <p id="atualizacao-status" class="lab__saida" aria-live="polite">Versão do cache ativo: <strong id="versao-sw">—</strong></p>
         <p><strong>Para ver o banner aparecer:</strong></p>
         <ol class="passos">
-          <li>Com o app rodando no servidor local, abra o <code>sw.js</code> e mude a linha <code>const VERSAO = 'v1.2.0'</code> para <code>'v1.2.1'</code>.</li>
+          <li>Com o app rodando no servidor local, abra o <code>sw.js</code> e mude a linha <code>const VERSAO = 'v1.3.0'</code> para <code>'v1.3.1'</code>.</li>
           <li>Salve o arquivo.</li>
           <li>Volte ao app e clique em "Procurar nova versão".</li>
           <li>O banner "Nova versão disponível" surgirá no topo. Clique em "Atualizar agora" e veja a página recarregar com a versão nova.</li>
@@ -936,13 +936,13 @@ self.addEventListener('message', (e) =&gt; {
       <ol class="passos">
         <li>Crie uma conta gratuita em <code>github.com</code>.</li>
         <li>Clique no <strong>+</strong> no alto da página e em <strong>New repository</strong>. Dê um nome (ex.: <code>meu-pwa</code>), deixe como <strong>Public</strong> e crie.</li>
-        <li>Na página do repositório, clique em <strong>uploading an existing file</strong> e arraste os arquivos do seu projeto (mantendo as pastas, como a <code>icons</code>). Clique em <strong>Commit changes</strong>.</li>
+        <li>Na página do repositório, clique em <strong>uploading an existing file</strong> e arraste <strong>todos</strong> os arquivos do seu projeto de uma vez (neste curso eles ficam soltos, sem subpastas, o que deixa o envio pelo navegador bem simples). Clique em <strong>Commit changes</strong>.</li>
         <li>Vá em <strong>Settings → Pages</strong>. Em <em>Source</em> escolha <em>Deploy from a branch</em>, depois a branch <code>main</code> e a pasta <code>/ (root)</code>, e clique em <strong>Save</strong>.</li>
         <li>Espere 1 a 2 minutos. O endereço do seu app aparece na própria página, no formato <code>https://seu-usuario.github.io/meu-pwa/</code>.</li>
       </ol>
       <div class="caixa caixa--dica">
         <strong>💡 Por que os caminhos deste projeto são "relativos"?</strong>
-        Repare que escrevemos <code>./sw.js</code> e <code>icons/icon-192.png</code>, e não <code>/sw.js</code>. O endereço do GitHub Pages tem o nome do repositório no meio (<code>/meu-pwa/</code>), e caminhos relativos funcionam em qualquer pasta.
+        Repare que escrevemos <code>./sw.js</code> e <code>icon-192.png</code>, e não <code>/sw.js</code>. O endereço do GitHub Pages tem o nome do repositório no meio (<code>/meu-pwa/</code>), e caminhos relativos funcionam em qualquer pasta.
       </div>
 
       <div class="parabens" id="parabens" hidden>
@@ -998,8 +998,8 @@ self.addEventListener('message', (e) =&gt; {
       <h3>Passo 2: o ícone</h3>
       <p>Você precisa de duas imagens PNG quadradas, de 192×192 e 512×512 pixels. Para começar, baixe as deste curso (depois, troque pelas suas) e salve-as dentro da pasta <code>meu-pwa</code> com estes nomes:</p>
       <p class="lab__acoes">
-        <a class="btn btn--secundario" href="icons/icon-192.png" download="icon-192.png">Baixar icon-192.png</a>
-        <a class="btn btn--secundario" href="icons/icon-512.png" download="icon-512.png">Baixar icon-512.png</a>
+        <a class="btn btn--secundario" href="icon-192.png" download="icon-192.png">Baixar icon-192.png</a>
+        <a class="btn btn--secundario" href="icon-512.png" download="icon-512.png">Baixar icon-512.png</a>
       </p>
 
       <h3>Passo 3: o index.html</h3>

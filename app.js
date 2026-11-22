@@ -716,7 +716,7 @@ function iniciarRecursosNativos() {
   });
 
   botaoTeste.addEventListener('click', async () => {
-    const opcoes = { body: 'Notificação local enviada pelo Service Worker.', icon: 'icons/icon-192.png', badge: 'icons/icon-192.png', tag: 'teste-pwa-brasil' };
+    const opcoes = { body: 'Notificação local enviada pelo Service Worker.', icon: 'icon-192.png', badge: 'icon-192.png', tag: 'teste-pwa-brasil' };
     try {
       const reg = swReg || (await navigator.serviceWorker.getRegistration());
       if (reg) await reg.showNotification('PWA Brasil (PT-BR)', opcoes);

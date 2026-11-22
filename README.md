@@ -21,24 +21,21 @@ a primeira opção de cada pergunta é a correta, e a ordem é embaralhada na te
 Para adicionar um módulo novo: copie uma `<section class="modulo">` do `index.html`,
 inclua o botão `.btn-concluir` e um link no menu. O progresso se ajusta sozinho.
 
-## Estrutura de pastas
+## Arquivos (todos soltos na raiz, sem subpastas)
 
 ```
-.
-├── index.html              # Estrutura: splash, drawer, 5 módulos e laboratórios
-├── styles.css              # Temas claro/escuro, responsividade, badges, código
-├── app.js                  # Navegação, SW, instalação, inspetor de cache, progresso
-├── quiz.js                 # Perguntas e lógica dos quizzes
-├── sw.js                   # Service Worker manual (pré-cache + 3 estratégias)
-├── manifest.webmanifest    # Web App Manifest
-├── offline.html            # Fallback offline de último recurso
-└── icons/
-    ├── icon-192.png
-    ├── icon-512.png
-    ├── icon-maskable-512.png
-    ├── apple-touch-icon.png
-    └── favicon.svg
+index.html              # Estrutura: splash, menu, 7 módulos, laboratórios, glossário
+styles.css              # Temas claro/escuro, responsividade, quiz, caixas didáticas
+app.js                  # Navegação, SW, instalação, inspetor de cache, progresso
+quiz.js                 # Perguntas e lógica dos quizzes
+sw.js                   # Service Worker manual (pré-cache + 3 estratégias)
+manifest.webmanifest    # Web App Manifest
+offline.html            # Fallback offline de último recurso
+icon-192.png  icon-512.png  icon-maskable-512.png  apple-touch-icon.png  favicon.svg
 ```
+
+Sem pastas, dá para arrastar tudo de uma vez na tela de upload do GitHub
+(**Add file → Upload files**).
 
 ## Rodar localmente
 
