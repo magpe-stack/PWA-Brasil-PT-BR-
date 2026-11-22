@@ -114,6 +114,7 @@
       </ul>
       <p class="drawer__titulo">Apoio</p>
       <ul class="menu">
+        <li><a href="#certificado" data-modulo="certificado"><span class="menu__num" aria-hidden="true">🎓</span> Certificado</a></li>
         <li><a href="#glossario" data-modulo="glossario"><span class="menu__num" aria-hidden="true">Aa</span> Glossário</a></li>
       </ul>
     </nav>
@@ -911,7 +912,7 @@ self.addEventListener('message', (e) =&gt; {
         <p id="atualizacao-status" class="lab__saida" aria-live="polite">Versão do cache ativo: <strong id="versao-sw">—</strong></p>
         <p><strong>Para ver o banner aparecer:</strong></p>
         <ol class="passos">
-          <li>Com o app rodando no servidor local, abra o <code>sw.js</code> e mude a linha <code>const VERSAO = 'v1.3.0'</code> para <code>'v1.3.1'</code>.</li>
+          <li>Com o app rodando no servidor local, abra o <code>sw.js</code> e mude a linha <code>const VERSAO = 'v1.4.0'</code> para <code>'v1.4.1'</code>.</li>
           <li>Salve o arquivo.</li>
           <li>Volte ao app e clique em "Procurar nova versão".</li>
           <li>O banner "Nova versão disponível" surgirá no topo. Clique em "Atualizar agora" e veja a página recarregar com a versão nova.</li>
@@ -947,7 +948,7 @@ self.addEventListener('message', (e) =&gt; {
 
       <div class="parabens" id="parabens" hidden>
         <h3>🎉 Parabéns!</h3>
-        <p>Você concluiu todos os módulos. Agora é a hora de construir o seu próprio PWA. Se ainda não fez o último módulo, ele é o seu passo a passo.</p>
+        <p>Você concluiu todos os módulos. Agora é a hora de construir o seu próprio PWA. Se ainda não fez o último módulo, ele é o seu passo a passo. Depois, <a href="#certificado">emita o seu certificado</a>.</p>
       </div>
 
       <div class="caixa caixa--resumo">
@@ -1122,6 +1123,48 @@ self.addEventListener('fetch', (evento) =&gt; {
       <footer class="modulo__rodape">
         <a class="btn btn--fantasma" href="#modulo-6" data-nav="modulo-6">← Anterior</a>
         <button class="btn btn--sucesso btn-concluir" data-modulo="modulo-7">Marcar módulo como concluído</button>
+        <a class="btn btn--primario" href="#certificado" data-nav="certificado">Certificado →</a>
+      </footer>
+    </section>
+
+    <!-- ================= CERTIFICADO ================= -->
+    <section id="certificado" class="modulo" data-titulo="Certificado de conclusão" hidden>
+      <header class="modulo__cab">
+        <p class="selo">Conquista</p>
+        <h2>Certificado de conclusão</h2>
+        <p class="lead">Terminou o curso? Emita o seu certificado, gerado aqui mesmo no seu aparelho, sem enviar nada para a internet.</p>
+      </header>
+
+      <h3>Como liberar</h3>
+      <p>O certificado é liberado quando você for aprovado nos <strong>7 quizzes</strong>, com 70% ou mais em cada um. Veja como está o seu caminho:</p>
+      <ul id="cert-lista" class="checklist" aria-live="polite"></ul>
+      <p id="cert-status" class="lab__saida" aria-live="polite"></p>
+
+      <div class="lab">
+        <h3>🎓 Gerar o meu certificado</h3>
+        <div class="form-linha">
+          <label>Seu nome, como deve aparecer no certificado
+            <input id="cert-nome" type="text" maxlength="60" placeholder="Ex.: Ana Souza" autocomplete="name">
+          </label>
+          <button id="btn-cert-gerar" class="btn btn--primario" disabled>Gerar certificado</button>
+        </div>
+        <p id="cert-erro" class="lab__saida erro" aria-live="polite"></p>
+        <div id="cert-resultado" hidden>
+          <canvas id="cert-canvas" class="cert-canvas" width="1754" height="1240" role="img" aria-label="Pré-visualização do certificado de conclusão"></canvas>
+          <div class="lab__acoes">
+            <button id="btn-cert-baixar" class="btn btn--sucesso">Baixar imagem (PNG)</button>
+          </div>
+          <p class="nota">Dica: a imagem tem tamanho de folha A4 deitada. Para imprimir ou salvar em PDF, abra a imagem baixada e use a opção de imprimir do seu aparelho.</p>
+        </div>
+        <div class="caixa caixa--atencao">
+          <strong>⚠️ Sobre o valor deste certificado</strong>
+          É um certificado de participação emitido automaticamente pelo próprio aplicativo, a partir das notas guardadas neste navegador. Ele não tem validade oficial. Se você limpar os dados do site, as notas somem e será preciso refazer os quizzes.
+        </div>
+      </div>
+
+      <footer class="modulo__rodape">
+        <a class="btn btn--fantasma" href="#modulo-7" data-nav="modulo-7">← Voltar ao Módulo 7</a>
+        <span></span>
         <a class="btn btn--primario" href="#glossario" data-nav="glossario">Glossário →</a>
       </footer>
     </section>

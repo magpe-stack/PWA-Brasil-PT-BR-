@@ -799,6 +799,158 @@ function iniciarBotoesCopiar() {
 }
 
 /* ---------------------------------------------------------------------
+ * 11c) CERTIFICADO DE CONCLUSÃO (desenhado em <canvas>, 100% no aparelho)
+ * Liberado quando os 7 quizzes têm a melhor nota >= 70%.
+ * ------------------------------------------------------------------- */
+const NOTA_CERTIFICADO = 70;
+
+function lerNotasQuiz() {
+  try { return JSON.parse(localStorage.getItem('pwa-brasil:quiz-v1')) || {}; } catch (e) { return {}; }
+}
+
+// Devolve a situação de cada quiz e se o certificado está liberado.
+function situacaoCertificado() {
+  const notas = lerNotasQuiz();
+  const itens = $$('.quiz[data-quiz]').map((q) => {
+    const id = q.dataset.quiz;
+    const secao = document.getElementById(id);
+    const melhor = notas[id] ? notas[id].melhor : null;
+    return { id, titulo: secao ? secao.dataset.titulo : id, melhor, aprovado: melhor !== null && melhor >= NOTA_CERTIFICADO };
+  });
+  const aprovados = itens.filter((i) => i.aprovado);
+  const media = aprovados.length ? Math.round(aprovados.reduce((t, i) => t + i.melhor, 0) / aprovados.length) : 0;
+  return { itens, liberado: itens.length > 0 && aprovados.length === itens.length, media };
+}
+
+function desenharListaCertificado() {
+  const lista = $('#cert-lista');
+  const { itens, liberado } = situacaoCertificado();
+  lista.replaceChildren();
+  itens.forEach((i) => {
+    const li = document.createElement('li');
+    li.className = 'cert-item';
+    const nome = document.createElement('span'); nome.textContent = i.titulo;
+    const marca = document.createElement('strong');
+    marca.className = i.aprovado ? 'ok' : 'pendente';
+    marca.textContent = i.aprovado ? `✔ ${i.melhor}%` : (i.melhor === null ? 'ainda não feito' : `✘ ${i.melhor}% (precisa de ${NOTA_CERTIFICADO}%)`);
+    li.append(nome, marca);
+    lista.append(li);
+  });
+  const feitos = itens.filter((i) => i.aprovado).length;
+  const status = $('#cert-status');
+  dizer(status, liberado ? 'Tudo certo! Seu certificado está liberado. 🎓' : `${feitos} de ${itens.length} quizzes aprovados. Faltam ${itens.length - feitos}.`, liberado ? 'ok' : undefined);
+  $('#btn-cert-gerar').disabled = !liberado;
+}
+
+// Reduz a fonte até o texto caber na largura máxima.
+function ajustarFonte(ctx, texto, familia, tamanho, larguraMax) {
+  let t = tamanho;
+  do { ctx.font = `bold ${t}px ${familia}`; t -= 2; } while (ctx.measureText(texto).width > larguraMax && t > 24);
+}
+
+async function desenharCertificado(nome, media) {
+  const canvas = $('#cert-canvas');
+  const ctx = canvas.getContext('2d');
+  const L = canvas.width, A = canvas.height, cx = L / 2;
+  const serifa = 'Georgia, "Times New Roman", serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'alphabetic';
+
+  // Fundo e molduras (azul, verde e amarelo: as cores do app)
+  ctx.fillStyle = '#fffdf7'; ctx.fillRect(0, 0, L, A);
+  ctx.strokeStyle = '#0b57d0'; ctx.lineWidth = 16; ctx.strokeRect(40, 40, L - 80, A - 80);
+  ctx.strokeStyle = '#009c3b'; ctx.lineWidth = 5; ctx.strokeRect(70, 70, L - 140, A - 140);
+  ctx.strokeStyle = '#e6b800'; ctx.lineWidth = 3; ctx.strokeRect(84, 84, L - 168, A - 168);
+
+  // Logotipo do app (o ícone já está no cache; se falhar, segue sem ele)
+  try {
+    const img = new Image();
+    img.src = 'icon-512.png';
+    await img.decode();
+    ctx.drawImage(img, cx - 80, 130, 160, 160);
+  } catch (e) { /* sem logotipo */ }
+
+  ctx.fillStyle = '#0b57d0';
+  ctx.font = `bold 34px ${serifa}`;
+  ctx.fillText('PWA BRASIL (PT-BR)', cx, 345);
+
+  ctx.fillStyle = '#1a1c1e';
+  ctx.font = `bold 84px ${serifa}`;
+  ctx.fillText('CERTIFICADO DE CONCLUSÃO', cx, 460);
+
+  ctx.font = `italic 36px ${serifa}`;
+  ctx.fillStyle = '#44474e';
+  ctx.fillText('Certificamos que', cx, 560);
+
+  // Nome (encolhe se for longo) com uma linha embaixo
+  ctx.fillStyle = '#0b57d0';
+  ajustarFonte(ctx, nome, serifa, 110, L - 360);
+  ctx.fillText(nome, cx, 690);
+  ctx.strokeStyle = '#c4c7d0'; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(300, 725); ctx.lineTo(L - 300, 725); ctx.stroke();
+
+  ctx.fillStyle = '#1a1c1e';
+  ctx.font = `36px ${serifa}`;
+  ctx.fillText('concluiu com aproveitamento o curso', cx, 805);
+  ctx.font = `bold 52px ${serifa}`;
+  ctx.fillText('PWA Brasil (PT-BR): alfabetização em PWA', cx, 880);
+  ctx.font = `32px ${serifa}`;
+  ctx.fillStyle = '#44474e';
+  const n = $$('.quiz[data-quiz]').length;
+  ctx.fillText(`${n} módulos concluídos, com aprovação em ${n} quizzes (média de ${media}%).`, cx, 945);
+
+  const data = new Date().toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' });
+  ctx.fillStyle = '#1a1c1e';
+  ctx.font = `34px ${serifa}`;
+  ctx.fillText(`Emitido em ${data}`, cx, 1040);
+
+  ctx.fillStyle = '#6b6f78';
+  ctx.font = `24px ${serifa}`;
+  ctx.fillText('Certificado de participação emitido automaticamente pelo aplicativo, sem validade oficial.', cx, 1130);
+}
+
+function iniciarCertificado() {
+  const campoNome = $('#cert-nome');
+  const botao = $('#btn-cert-gerar');
+  const erro = $('#cert-erro');
+  campoNome.value = Armazenamento.ler('nome-certificado', '');
+
+  desenharListaCertificado();
+  document.addEventListener('quiz:aprovado', desenharListaCertificado);
+  window.addEventListener('hashchange', () => { if (location.hash === '#certificado') desenharListaCertificado(); });
+
+  botao.addEventListener('click', async () => {
+    dizer(erro, '');
+    const nome = campoNome.value.trim().replace(/\s+/g, ' ');
+    const situacao = situacaoCertificado();
+    if (!situacao.liberado) return dizer(erro, 'Aprovação nos 7 quizzes ainda pendente.', 'erro');
+    if (nome.length < 3) return dizer(erro, 'Digite o seu nome (pelo menos 3 letras).', 'erro');
+    Armazenamento.gravar('nome-certificado', nome);
+
+    botao.disabled = true;
+    await desenharCertificado(nome, situacao.media);
+    botao.disabled = false;
+    $('#cert-resultado').hidden = false;
+    $('#cert-canvas').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    toast('Certificado gerado! 🎓');
+  });
+
+  $('#btn-cert-baixar').addEventListener('click', () => {
+    $('#cert-canvas').toBlob((blob) => {
+      if (!blob) return dizer(erro, 'Não foi possível criar a imagem.', 'erro');
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'certificado-pwa-brasil.png';
+      document.body.append(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 2000);
+    }, 'image/png');
+  });
+}
+
+/* ---------------------------------------------------------------------
  * 12) INICIALIZAÇÃO
  * ------------------------------------------------------------------- */
 document.addEventListener('DOMContentLoaded', () => {
@@ -814,6 +966,7 @@ document.addEventListener('DOMContentLoaded', () => {
   iniciarRecursosNativos();
   iniciarLaboratoriosHTML();
   iniciarBotoesCopiar();
+  iniciarCertificado();
   iniciarNavegacao();
   iniciarServiceWorker();
 });

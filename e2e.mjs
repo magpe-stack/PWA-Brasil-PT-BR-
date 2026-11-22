@@ -84,6 +84,33 @@ try {
   await quiz.locator('button[type=submit]').click();
   conferir('quiz com 100% conclui o módulo 1', (await pagina.locator('#progresso-texto').innerText()).startsWith('1 de 7'));
 
+  // Certificado: bloqueado sem notas, liberado com os 7 quizzes aprovados
+  await pagina.goto(URL_BASE + '#certificado');
+  await pagina.evaluate(() => localStorage.setItem('pwa-brasil:quiz-v1', JSON.stringify({ 'modulo-1': { melhor: 100, tentativas: 1 } })));
+  await pagina.reload();
+  conferir('certificado bloqueado com só 1 quiz aprovado', await pagina.locator('#btn-cert-gerar').isDisabled());
+  await pagina.evaluate(() => {
+    const n = {}; for (let i = 1; i <= 7; i++) n['modulo-' + i] = { melhor: i === 3 ? 80 : 100, tentativas: 1 };
+    localStorage.setItem('pwa-brasil:quiz-v1', JSON.stringify(n));
+  });
+  await pagina.reload();
+  conferir('certificado liberado com os 7 quizzes aprovados', await pagina.locator('#btn-cert-gerar').isEnabled());
+  await pagina.locator('#btn-cert-gerar').click();
+  await pagina.waitForTimeout(300);
+  conferir('nome curto demais é recusado', (await pagina.locator('#cert-erro').innerText()).includes('nome'));
+  await pagina.fill('#cert-nome', 'Maria da Conceição Albuquerque');
+  await pagina.locator('#btn-cert-gerar').click();
+  await pagina.waitForSelector('#cert-resultado:not([hidden])');
+  const pintou = await pagina.evaluate(() => {
+    const c = document.getElementById('cert-canvas'); const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data;
+    let azul = 0; for (let i = 0; i < d.length; i += 4 * 400) if (d[i + 2] > 200 && d[i] < 40) azul++;
+    return azul > 20;
+  });
+  conferir('certificado foi desenhado no canvas', pintou);
+  const [download] = await Promise.all([pagina.waitForEvent('download'), pagina.locator('#btn-cert-baixar').click()]);
+  conferir('download do PNG funciona', download.suggestedFilename() === 'certificado-pwa-brasil.png');
+  if (process.env.CERT_PNG) await pagina.locator('#cert-canvas').screenshot({ path: process.env.CERT_PNG });
+
   // Offline de verdade
   await contexto.setOffline(true);
   await pagina.goto(URL_BASE);

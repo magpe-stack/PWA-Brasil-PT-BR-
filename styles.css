@@ -336,6 +336,11 @@ input[type="text"], select {
 .quiz__retorno { margin: .6rem 0 0; font-size: .92rem; color: var(--texto-suave); }
 .quiz__retorno:empty { display: none; }
 
+.cert-canvas { width: 100%; height: auto; display: block; border: 1px solid var(--borda); border-radius: 10px; background: #fff; margin: .8rem 0; }
+.cert-item { display: flex; justify-content: space-between; gap: .6rem; padding: .35rem 0; border-bottom: 1px solid var(--borda); }
+.cert-item strong.ok { color: var(--sucesso); }
+.cert-item strong.pendente { color: var(--texto-suave); }
+
 .glossario dt { padding-top: .6rem; border-top: 1px solid var(--borda); color: var(--primaria); }
 .glossario dt:first-child { border-top: 0; }
 .cartao h4 small { font-weight: 500; color: var(--texto-suave); }

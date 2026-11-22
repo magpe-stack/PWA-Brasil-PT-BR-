@@ -18,6 +18,9 @@ Cada módulo termina com um **quiz** (5 a 6 perguntas, correção com explicaç�
 no navegador; 70% ou mais conclui o módulo). As perguntas ficam em `quiz.js`, no objeto `QUIZZES`:
 a primeira opção de cada pergunta é a correta, e a ordem é embaralhada na tela.
 
+Ao ser aprovado nos 7 quizzes, o aluno pode emitir um **certificado de conclusão** (imagem PNG desenhada
+em `<canvas>`, sem enviar dados a lugar nenhum). Ele é de participação, sem validade oficial.
+
 Para adicionar um módulo novo: copie uma `<section class="modulo">` do `index.html`,
 inclua o botão `.btn-concluir` e um link no menu. O progresso se ajusta sozinho.
 
