@@ -27,6 +27,9 @@ const Armazenamento = {
   }
 };
 
+// Depois de abrir um arquivo de progresso a página recarrega; nesse caso voltamos à tela "Salvar/abrir".
+const VEIO_DA_IMPORTACAO = (() => { try { return !!sessionStorage.getItem('pwa-brasil:msg-importacao'); } catch (e) { return false; } })();
+
 let temporizadorToast = null;
 function toast(mensagem, ms = 3000) {
   const el = $('#toast');
@@ -41,6 +44,13 @@ function dizer(el, texto, estado) {
   el.textContent = texto;
   el.classList.remove('ok', 'erro');
   if (estado) el.classList.add(estado);
+}
+
+// Igual a dizer(), mas também mostra um aviso (toast). Útil quando a ação parte do menu
+// e a mensagem fixa fica em uma página que não está aberta.
+function dizerEAvisar(el, texto, estado) {
+  dizer(el, texto, estado);
+  if (texto) toast(texto, 5000);
 }
 
 /* ---------------------------------------------------------------------
@@ -93,14 +103,13 @@ function iniciarSplash() {
 }
 
 /* ---------------------------------------------------------------------
- * 3) DRAWER (menu lateral)
+ * 3) MENU (abre pelo hambúrguer, no canto superior direito)
  * ------------------------------------------------------------------- */
 function iniciarDrawer() {
   const drawer = $('#drawer');
   const overlay = $('#overlay');
   const abrir = $('#menu-btn');
   const fechar = $('#fechar-menu');
-  const desktop = window.matchMedia('(min-width: 1100px)');
 
   const aberto = () => drawer.classList.contains('drawer--aberto');
 
@@ -113,10 +122,10 @@ function iniciarDrawer() {
   }
   function fecharMenu(devolverFoco = true) {
     drawer.classList.remove('drawer--aberto');
-    drawer.setAttribute('aria-hidden', String(!desktop.matches));
+    drawer.setAttribute('aria-hidden', 'true');
     overlay.hidden = true;
     abrir.setAttribute('aria-expanded', 'false');
-    if (devolverFoco && !desktop.matches) abrir.focus();
+    if (devolverFoco) abrir.focus();
   }
 
   abrir.addEventListener('click', abrirMenu);
@@ -124,25 +133,17 @@ function iniciarDrawer() {
   overlay.addEventListener('click', () => fecharMenu());
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && aberto()) fecharMenu(); });
 
-  // Clicar num link do menu fecha o drawer no mobile.
-  $$('a', drawer).forEach((a) => a.addEventListener('click', () => { if (aberto()) fecharMenu(false); }));
-
-  // Em telas grandes o menu é fixo (ver CSS) e deve ser lido por leitores de tela.
-  const ajustar = () => {
-    if (desktop.matches) { overlay.hidden = true; drawer.setAttribute('aria-hidden', 'false'); }
-    else if (!aberto()) drawer.setAttribute('aria-hidden', 'true');
-  };
-  desktop.addEventListener('change', ajustar);
-  ajustar();
+  // Clicar em um link ou botão do menu fecha o menu (a ação do botão roda logo em seguida).
+  $$('a, .menu__botao', drawer).forEach((el) => el.addEventListener('click', () => { if (aberto()) fecharMenu(false); }));
 }
 
 /* ---------------------------------------------------------------------
  * 4) NAVEGAÇÃO ENTRE MÓDULOS (roteamento por hash: #modulo-3, #lab-cache)
  * ------------------------------------------------------------------- */
-let moduloAtual = 'modulo-1';
+let moduloAtual = 'inicio';
 
 function mostrarPelaHash(primeiraVez = false) {
-  const id = decodeURIComponent(location.hash.replace('#', '')) || 'modulo-1';
+  const id = decodeURIComponent(location.hash.replace('#', '')) || 'inicio';
   const alvo = document.getElementById(id);
   if (!alvo) return mostrarPelaHash.padrao();
 
@@ -169,15 +170,20 @@ function mostrarPelaHash(primeiraVez = false) {
   // (Procuramos pelo laboratório, e não pelo número do módulo, para não quebrar se a ordem mudar.)
   if (modulo.querySelector('#lab-cache')) { atualizarInfoSW(); listarCache(); }
   if (modulo.querySelector('#lab-atualizacao')) pedirVersaoAoSW();
+  if (modulo.id === 'inicio') desenharInicio();   // o painel é refeito a cada visita
 }
-mostrarPelaHash.padrao = () => { history.replaceState(null, '', '#modulo-1'); mostrarPelaHash(true); };
+mostrarPelaHash.padrao = () => { history.replaceState(null, '', '#inicio'); mostrarPelaHash(true); };
 
 function iniciarNavegacao() {
-  // Atalhos do manifest abrem com ?modulo=modulo-3: converte em hash.
+  // Toda abertura do app cai no Início (depois do splash). As exceções:
+  //  - atalhos do manifest e links de aulas compartilhadas, que abrem com ?modulo=modulo-3;
+  //  - a volta de um arquivo de progresso aberto, que mostra a tela "Salvar e abrir".
   const parametro = new URLSearchParams(location.search).get('modulo');
-  if (parametro && document.getElementById(parametro)) {
-    history.replaceState(null, '', location.pathname + '#' + parametro);
-  }
+  let destino = '#inicio';
+  if (parametro && document.getElementById(parametro)) destino = '#' + parametro;
+  else if (VEIO_DA_IMPORTACAO) destino = '#progresso';
+  history.replaceState(null, '', location.pathname + destino);
+
   window.addEventListener('hashchange', () => mostrarPelaHash());
   mostrarPelaHash(true);
 }
@@ -493,6 +499,7 @@ function iniciarInstalacao() {
     e.preventDefault();
     eventoInstalacao = e;
     botao.disabled = false;
+    $('#menu-instalar-item').hidden = false;
     dizer(status, 'Pronto! O navegador liberou a instalação. Clique no botão.', 'ok');
   });
 
@@ -503,12 +510,14 @@ function iniciarInstalacao() {
     dizer(status, outcome === 'accepted' ? 'Instalação aceita! Procure o ícone na sua tela inicial.' : 'Instalação dispensada. Você pode tentar de novo depois.', outcome === 'accepted' ? 'ok' : undefined);
     eventoInstalacao = null;
     botao.disabled = true;
+    $('#menu-instalar-item').hidden = true;
   });
 
   // Disparado depois que a instalação termina.
   window.addEventListener('appinstalled', () => {
     eventoInstalacao = null;
     botao.disabled = true;
+    $('#menu-instalar-item').hidden = true;
     dizer(status, 'PWA Brasil instalado com sucesso! 🎉', 'ok');
     toast('App instalado!');
   });
@@ -667,20 +676,20 @@ function iniciarRecursosNativos() {
     if (navigator.share && (!navigator.canShare || navigator.canShare(dados))) {
       try {
         await navigator.share(dados);
-        dizer(statusShare, 'Compartilhado com sucesso!', 'ok');
+        dizerEAvisar(statusShare, 'Compartilhado com sucesso!', 'ok');
       } catch (erro) {
         // AbortError = o usuário fechou a folha de compartilhamento (não é falha).
-        if (erro.name === 'AbortError') dizer(statusShare, 'Compartilhamento cancelado.');
-        else dizer(statusShare, 'Erro ao compartilhar: ' + erro.message, 'erro');
+        if (erro.name === 'AbortError') dizerEAvisar(statusShare, 'Compartilhamento cancelado.');
+        else dizerEAvisar(statusShare, 'Erro ao compartilhar: ' + erro.message, 'erro');
       }
     } else if (navigator.clipboard) {
       // Plano B honesto: o navegador não tem Web Share, então copiamos o link.
       try {
         await navigator.clipboard.writeText(dados.url);
-        dizer(statusShare, 'Este navegador não suporta a Web Share API. O link foi copiado para a área de transferência.', 'ok');
-      } catch (e) { dizer(statusShare, 'Web Share indisponível e a cópia foi bloqueada. Link: ' + dados.url, 'erro'); }
+        dizerEAvisar(statusShare, 'Este navegador não suporta a Web Share API. O link foi copiado para a área de transferência.', 'ok');
+      } catch (e) { dizerEAvisar(statusShare, 'Web Share indisponível e a cópia foi bloqueada. Link: ' + dados.url, 'erro'); }
     } else {
-      dizer(statusShare, 'Web Share indisponível. Copie o link: ' + dados.url, 'erro');
+      dizerEAvisar(statusShare, 'Web Share indisponível. Copie o link: ' + dados.url, 'erro');
     }
   };
 
@@ -692,7 +701,7 @@ function iniciarRecursosNativos() {
   }));
   $('#btn-compartilhar-aula').addEventListener('click', () => {
     const titulo = document.getElementById(moduloAtual).dataset.titulo;
-    compartilhar({ title: titulo + ' — PWA Brasil (PT-BR)', text: 'Estou aprendendo: ' + titulo, url: base + '#' + moduloAtual });
+    compartilhar({ title: titulo + ' — PWA Brasil (PT-BR)', text: 'Estou aprendendo: ' + titulo, url: base + '?modulo=' + moduloAtual });
   });
 
   // --- Notificações ---
@@ -967,7 +976,7 @@ function iniciarCertificado() {
 const NOME_APP = 'PWA Brasil (PT-BR)';
 const FORMATO_ARQUIVO = 1;
 const TAMANHO_MAXIMO_ARQUIVO = 200 * 1024; // 200 KB: o arquivo real tem poucos KB
-const CHAVES_PROGRESSO = ['progresso-v2', 'quiz-v1', 'checklist', 'apelido', 'nome-certificado', 'tema'];
+const CHAVES_PROGRESSO = ['progresso-v2', 'quiz-v1', 'checklist', 'apelido', 'nome-certificado', 'tema', 'labs-v1', 'estudo-v1'];
 const TIPOS_ARQUIVO = [{ description: 'Progresso do PWA Brasil', accept: { 'application/json': ['.json'] } }];
 
 // Junta o que está salvo neste navegador (textos exatamente como estão no localStorage).
@@ -1022,8 +1031,33 @@ function validarProgresso(obj) {
   if (typeof nome === 'string') limpo['nome-certificado'] = semControle(nome, 60);
   if (obj.dados.tema === 'claro' || obj.dados.tema === 'escuro') limpo.tema = obj.dados.tema;
 
+  // Laboratórios feitos: só os ids conhecidos, com data válida
+  const labsArq = lerJSON('labs-v1');
+  if (labsArq && typeof labsArq === 'object' && !Array.isArray(labsArq)) {
+    limpo.labs = {};
+    LABS.forEach((l) => {
+      const data = labsArq[l.id];
+      if (typeof data === 'string' && !Number.isNaN(Date.parse(data))) limpo.labs[l.id] = new Date(data).toISOString();
+    });
+  }
+
+  // Tempo de estudo: chaves simples, números plausíveis (até 1000 h por item) e datas no formato AAAA-MM-DD
+  const estArq = lerJSON('estudo-v1');
+  if (estArq && typeof estArq === 'object' && !Array.isArray(estArq)) {
+    limpo.estudo = { iniciadoEm: null, segundos: {}, dias: [] };
+    if (typeof estArq.iniciadoEm === 'string' && !Number.isNaN(Date.parse(estArq.iniciadoEm))) limpo.estudo.iniciadoEm = new Date(estArq.iniciadoEm).toISOString();
+    if (estArq.segundos && typeof estArq.segundos === 'object' && !Array.isArray(estArq.segundos)) {
+      Object.entries(estArq.segundos).slice(0, 30).forEach(([k, v]) => {
+        if (/^[a-z0-9-]{1,30}$/.test(k) && Number.isFinite(v) && v >= 0 && v <= 3600000) limpo.estudo.segundos[k] = Math.round(v);
+      });
+    }
+    if (Array.isArray(estArq.dias)) limpo.estudo.dias = [...new Set(estArq.dias.filter((d) => typeof d === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(d)))].slice(-800);
+  }
+
   const aproveitavel = (limpo.concluidos && limpo.concluidos.length) || (limpo.quiz && Object.keys(limpo.quiz).length)
-    || (limpo.checklist && Object.keys(limpo.checklist).length) || limpo.apelido || limpo['nome-certificado'];
+    || (limpo.checklist && Object.keys(limpo.checklist).length) || limpo.apelido || limpo['nome-certificado']
+    || (limpo.labs && Object.keys(limpo.labs).length)
+    || (limpo.estudo && (limpo.estudo.iniciadoEm || Object.keys(limpo.estudo.segundos).length || limpo.estudo.dias.length));
   if (!aproveitavel) return { erro: 'O arquivo não contém nenhum progresso aproveitável.' };
   return { limpo };
 }
@@ -1062,7 +1096,7 @@ async function salvarProgresso() {
       await escrita.close();
       salvouComo = `Arquivo "${alvo.name}" salvo no local que você escolheu.`;
     } catch (erro) {
-      if (erro.name === 'AbortError') return dizer(status, 'Salvamento cancelado.');
+      if (erro.name === 'AbortError') return dizerEAvisar(status, 'Salvamento cancelado.');
       // Qualquer outro problema (ex.: janela embutida): usa o download comum.
     }
   }
@@ -1071,21 +1105,21 @@ async function salvarProgresso() {
     salvouComo = `Arquivo "${nome}" baixado. Procure na pasta de downloads do seu aparelho e guarde onde quiser.`;
   }
   Armazenamento.gravar('salvo-em', new Date().toISOString());
-  dizer(status, salvouComo, 'ok');
+  dizerEAvisar(status, salvouComo, 'ok');
   desenharResumoProgresso();
 }
 
 async function processarArquivoProgresso(arquivo) {
   const status = $('#prog-status');
   if (!arquivo) return;
-  if (arquivo.size > TAMANHO_MAXIMO_ARQUIVO) return dizer(status, 'O arquivo é grande demais para ser um progresso deste curso.', 'erro');
+  if (arquivo.size > TAMANHO_MAXIMO_ARQUIVO) return dizerEAvisar(status, 'O arquivo é grande demais para ser um progresso deste curso.', 'erro');
 
   let obj;
   try { obj = JSON.parse(await arquivo.text()); }
-  catch (e) { return dizer(status, 'Não consegui ler o arquivo: ele não é um JSON válido.', 'erro'); }
+  catch (e) { return dizerEAvisar(status, 'Não consegui ler o arquivo: ele não é um JSON válido.', 'erro'); }
 
   const { limpo, erro } = validarProgresso(obj);
-  if (erro) return dizer(status, erro, 'erro');
+  if (erro) return dizerEAvisar(status, erro, 'erro');
 
   const somado = {
     concluidos: [...new Set([...concluidos, ...(limpo.concluidos || [])])],
@@ -1096,17 +1130,30 @@ async function processarArquivoProgresso(arquivo) {
     somado.quiz[id] = atual ? { melhor: Math.max(atual.melhor, n.melhor), tentativas: Math.max(atual.tentativas, n.tentativas) } : n;
   });
 
+  // Laboratórios: união (vale a data mais antiga). Tempo: vale o maior valor de cada módulo; dias: união.
+  const labsSomados = { ...Armazenamento.ler('labs-v1', {}) };
+  Object.entries(limpo.labs || {}).forEach(([id, data]) => { if (!labsSomados[id] || data < labsSomados[id]) labsSomados[id] = data; });
+  const estAtual = normalizarEstudo(Armazenamento.ler('estudo-v1', null));
+  const estSomado = { iniciadoEm: estAtual.iniciadoEm, segundos: { ...estAtual.segundos }, dias: [...estAtual.dias] };
+  if (limpo.estudo) {
+    if (limpo.estudo.iniciadoEm && (!estSomado.iniciadoEm || limpo.estudo.iniciadoEm < estSomado.iniciadoEm)) estSomado.iniciadoEm = limpo.estudo.iniciadoEm;
+    Object.entries(limpo.estudo.segundos).forEach(([k, v]) => { estSomado.segundos[k] = Math.max(estSomado.segundos[k] || 0, v); });
+    estSomado.dias = [...new Set([...estSomado.dias, ...limpo.estudo.dias])].sort().slice(-800);
+  }
+
   const ok = confirm(
     `Arquivo de ${obj.salvoEm ? new Date(obj.salvoEm).toLocaleDateString('pt-BR') : 'data desconhecida'}.\n\n` +
     `No arquivo: ${resumoDoProgresso(limpo.concluidos, limpo.quiz)}.\n` +
     `Depois de somar com este aparelho: ${resumoDoProgresso(somado.concluidos, somado.quiz)}.\n\n` +
     'Nada será apagado. A página vai recarregar. Continuar?');
-  if (!ok) return dizer(status, 'Abertura cancelada. Nada foi alterado.');
+  if (!ok) return dizerEAvisar(status, 'Abertura cancelada. Nada foi alterado.');
 
   const gravarJSON = (chave, valor) => localStorage.setItem('pwa-brasil:' + chave, JSON.stringify(valor));
   try {
     gravarJSON('progresso-v2', somado.concluidos);
     gravarJSON('quiz-v1', somado.quiz);
+    gravarJSON('labs-v1', labsSomados);
+    gravarJSON('estudo-v1', estSomado);
     if (limpo.checklist) gravarJSON('checklist', { ...Armazenamento.ler('checklist', {}), ...limpo.checklist });
     if (limpo.apelido) gravarJSON('apelido', limpo.apelido);
     if (limpo['nome-certificado']) gravarJSON('nome-certificado', limpo['nome-certificado']);
@@ -1114,7 +1161,7 @@ async function processarArquivoProgresso(arquivo) {
     sessionStorage.setItem('pwa-brasil:pular-splash', '1');
     sessionStorage.setItem('pwa-brasil:msg-importacao', 'Progresso aberto com sucesso: ' + resumoDoProgresso(somado.concluidos, somado.quiz) + '.');
   } catch (e) {
-    return dizer(status, 'Não foi possível gravar o progresso neste navegador (armazenamento bloqueado ou cheio).', 'erro');
+    return dizerEAvisar(status, 'Não foi possível gravar o progresso neste navegador (armazenamento bloqueado ou cheio).', 'erro');
   }
   location.hash = '#progresso';
   location.reload();
@@ -1126,7 +1173,7 @@ async function abrirProgresso() {
       const [alvo] = await window.showOpenFilePicker({ types: TIPOS_ARQUIVO, multiple: false });
       return processarArquivoProgresso(await alvo.getFile());
     } catch (erro) {
-      if (erro.name === 'AbortError') return dizer($('#prog-status'), 'Abertura cancelada.');
+      if (erro.name === 'AbortError') return dizerEAvisar($('#prog-status'), 'Abertura cancelada.');
       // Outro problema: cai para o seletor comum.
     }
   }
@@ -1163,6 +1210,321 @@ function iniciarProgressoEmArquivo() {
 }
 
 /* ---------------------------------------------------------------------
+ * 11e) INÍCIO (boas-vindas e PAINEL), LABORATÓRIOS FEITOS E TEMPO DE ESTUDO
+ * ------------------------------------------------------------------- */
+
+// Tempo médio estimado de cada módulo, em minutos (leitura + laboratório + quiz).
+const MIN_MODULO = { 'modulo-1': 30, 'modulo-2': 20, 'modulo-3': 25, 'modulo-4': 35, 'modulo-5': 25, 'modulo-6': 30, 'modulo-7': 35 };
+
+// Os "exercícios" do curso: cada laboratório ao vivo, ligado ao módulo em que aparece.
+const LABS = [
+  { id: 'lab-html', modulo: 'modulo-1', titulo: 'Editor de HTML ao vivo' },
+  { id: 'lab-fonte', modulo: 'modulo-1', titulo: 'Espie o código deste app' },
+  { id: 'lab-checklist', modulo: 'modulo-2', titulo: 'Checklist de prontidão' },
+  { id: 'lab-instalacao', modulo: 'modulo-3', titulo: 'Instalar e inspecionar o manifest' },
+  { id: 'lab-cache', modulo: 'modulo-4', titulo: 'Inspetor de cache' },
+  { id: 'lab-nativo', modulo: 'modulo-5', titulo: 'Compartilhar e notificações' },
+  { id: 'lab-atualizacao', modulo: 'modulo-6', titulo: 'Ciclo de atualização' }
+];
+
+/* ----- Tempo de estudo ----- */
+const dataLocal = (d = new Date()) =>
+  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+
+// Garante que o que veio do localStorage tem o formato certo (ele pode ter sido editado à mão).
+function normalizarEstudo(e) {
+  const o = e && typeof e === 'object' && !Array.isArray(e) ? e : {};
+  const segundos = {};
+  if (o.segundos && typeof o.segundos === 'object') {
+    Object.entries(o.segundos).forEach(([k, v]) => { if (Number.isFinite(v) && v >= 0) segundos[k] = v; });
+  }
+  return {
+    iniciadoEm: typeof o.iniciadoEm === 'string' ? o.iniciadoEm : null,
+    segundos,
+    dias: Array.isArray(o.dias) ? o.dias.filter((d) => typeof d === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(d)).slice(-800) : []
+  };
+}
+let estudo = normalizarEstudo(Armazenamento.ler('estudo-v1', null));
+const salvarEstudo = () => Armazenamento.gravar('estudo-v1', estudo);
+
+// A cada 10 s, soma 10 s de estudo ao módulo aberto, mas só se a aba está visível
+// e houve algum toque, tecla ou rolagem nos últimos 2 minutos (aba esquecida não conta).
+let ultimaInteracao = Date.now();
+function iniciarCronometro() {
+  ['pointerdown', 'keydown', 'scroll', 'touchstart'].forEach((ev) =>
+    window.addEventListener(ev, () => { ultimaInteracao = Date.now(); }, { passive: true }));
+  setInterval(() => {
+    if (document.visibilityState !== 'visible' || document.getElementById('splash')) return;
+    if (Date.now() - ultimaInteracao > 120000) return;
+    estudo.segundos[moduloAtual] = (estudo.segundos[moduloAtual] || 0) + 10;
+    const hoje = dataLocal();
+    if (!estudo.dias.includes(hoje)) estudo.dias.push(hoje);
+    salvarEstudo();
+  }, 10000);
+}
+
+/* ----- Laboratórios feitos ----- */
+function marcarLab(id) {
+  const labs = Armazenamento.ler('labs-v1', {});
+  if (labs[id]) return;                       // já estava marcado
+  labs[id] = new Date().toISOString();
+  Armazenamento.gravar('labs-v1', labs);
+  const lab = LABS.find((l) => l.id === id);
+  toast('Laboratório concluído: ' + (lab ? lab.titulo : id) + ' ✔');
+}
+
+// Um laboratório conta como "feito" quando o aluno usa o seu controle principal.
+function iniciarRegistroDeLabs() {
+  [['lab-html', '#editor-html', 'input'], ['lab-fonte', '#btn-ver-fonte', 'click'],
+   ['lab-checklist', '#btn-auto-checklist', 'click'], ['lab-instalacao', '#btn-carregar-manifest', 'click'],
+   ['lab-cache', '#btn-lab-testar', 'click'], ['lab-atualizacao', '#btn-checar-atualizacao', 'click']
+  ].forEach(([id, seletor, evento]) => {
+    const el = $(seletor);
+    if (el) el.addEventListener(evento, () => marcarLab(id));
+  });
+  $('#lab-nativo').addEventListener('click', (e) => { if (e.target.closest('button')) marcarLab('lab-nativo'); });
+}
+
+/* ----- Formatação ----- */
+function fmtMin(min) {
+  min = Math.round(min);
+  if (min < 1) return 'menos de 1 min';
+  if (min < 60) return min + ' min';
+  const h = Math.floor(min / 60), m = min % 60;
+  return m ? `${h} h ${String(m).padStart(2, '0')} min` : `${h} h`;
+}
+const fmtSeg = (s) => (s <= 0 ? '—' : fmtMin(s / 60));
+
+// Pequeno construtor de elementos (sem innerHTML: todo texto entra como texto puro).
+function h(tag, props, ...filhos) {
+  const el = document.createElement(tag);
+  Object.entries(props || {}).forEach(([k, v]) => {
+    if (v === null || v === undefined || v === false) return;
+    if (k === 'class') el.className = v;
+    else if (k === 'estilo') Object.entries(v).forEach(([p, val]) => el.style.setProperty(p, val));
+    else if (k.startsWith('on') && typeof v === 'function') el.addEventListener(k.slice(2), v);
+    else el.setAttribute(k, v);
+  });
+  filhos.flat(Infinity).forEach((f) => {
+    if (f === null || f === undefined || f === false) return;
+    el.append(f.nodeType ? f : document.createTextNode(String(f)));
+  });
+  return el;
+}
+
+/* ----- Cálculos do painel ----- */
+function sequenciaAtual(dias) {
+  const conjunto = new Set(dias);
+  const d = new Date();
+  if (!conjunto.has(dataLocal(d))) {          // se hoje ainda não estudou, a sequência pode terminar ontem
+    d.setDate(d.getDate() - 1);
+    if (!conjunto.has(dataLocal(d))) return 0;
+  }
+  let n = 0;
+  while (conjunto.has(dataLocal(d))) { n++; d.setDate(d.getDate() - 1); }
+  return n;
+}
+
+function cursoIniciado() {
+  return !!estudo.iniciadoEm || concluidos.length > 0
+    || Object.keys(lerNotasQuiz()).length > 0
+    || Object.keys(Armazenamento.ler('labs-v1', {})).length > 0
+    || Object.keys(estudo.segundos).some((k) => k.startsWith('modulo-'));
+}
+
+// Estima o tempo que falta. Depois do 1º módulo concluído, ajusta ao ritmo real do aluno
+// (limitado entre 0,5x e 2x para um módulo muito rápido ou muito lento não distorcer tudo).
+function estimarRestante(mods) {
+  const concl = mods.filter((m) => m.concluido);
+  const esperado = concl.reduce((t, m) => t + m.estimativa, 0);
+  const gasto = concl.reduce((t, m) => t + m.seg / 60, 0);
+  const personalizado = concl.length > 0 && gasto >= 5;
+  const ritmo = personalizado ? Math.min(2, Math.max(0.5, gasto / esperado)) : 1;
+  let minutos = 0;
+  mods.filter((m) => !m.concluido).forEach((m) => {
+    const previsto = m.estimativa * ritmo;
+    minutos += Math.max(previsto * 0.15, previsto - m.seg / 60);   // o que já estudou desconta, mas sobra ao menos 15%
+  });
+  return { minutos: Math.round(minutos), personalizado, ritmo };
+}
+
+function calcularPainel() {
+  const ids = $$('.btn-concluir').map((b) => b.dataset.modulo);
+  const notas = lerNotasQuiz();
+  const labs = Armazenamento.ler('labs-v1', {});
+  const check = Armazenamento.ler('checklist', {});
+
+  const mods = ids.map((id) => {
+    const secao = document.getElementById(id);
+    const seg = estudo.segundos[id] || 0;
+    const nota = notas[id] || null;
+    const doModulo = LABS.filter((l) => l.modulo === id);
+    const labsFeitos = doModulo.filter((l) => labs[l.id]).length;
+    const concluido = concluidos.includes(id);
+    return {
+      id, n: Number(id.split('-')[1]), titulo: secao.dataset.titulo.replace(/^Módulo \d+ — /, ''),
+      seg, nota, labsTotal: doModulo.length, labsFeitos, concluido,
+      status: concluido ? 'concluido' : (seg >= 30 || nota || labsFeitos ? 'andamento' : 'novo'),
+      estimativa: MIN_MODULO[id] || 20
+    };
+  });
+
+  const comNota = mods.filter((m) => m.nota);
+  const segundosTotal = Object.values(estudo.segundos).reduce((t, v) => t + v, 0);
+  const itensChecklist = $$('#checklist input[data-item]').length;
+  return {
+    mods, total: mods.length,
+    concluidos: mods.filter((m) => m.concluido).length,
+    quizAprovados: comNota.filter((m) => m.nota.melhor >= NOTA_CERTIFICADO).length,
+    media: comNota.length ? Math.round(comNota.reduce((t, m) => t + m.nota.melhor, 0) / comNota.length) : null,
+    tentativas: comNota.reduce((t, m) => t + m.nota.tentativas, 0),
+    labsFeitos: LABS.filter((l) => labs[l.id]).length,
+    checklistMarcados: Object.values(check).filter(Boolean).length, itensChecklist,
+    segundosTotal, dias: estudo.dias.length, sequencia: sequenciaAtual(estudo.dias),
+    proximo: mods.find((m) => !m.concluido) || null,
+    algumProgresso: mods.some((m) => m.status !== 'novo'),
+    estimativa: estimarRestante(mods), labs
+  };
+}
+
+/* ----- Desenho da página inicial ----- */
+function desenharInicio() {
+  const iniciado = cursoIniciado();
+  $('#inicio-boasvindas').hidden = iniciado;
+  $('#painel').hidden = !iniciado;
+  if (!iniciado) return;
+
+  const d = calcularPainel();
+  const pct = Math.round((d.concluidos / d.total) * 100);
+  const apelido = Armazenamento.ler('apelido', '');
+  const cert = situacaoCertificado();
+  const salvoEm = Armazenamento.ler('salvo-em', null);
+
+  const topo = h('div', { class: 'painel__topo' },
+    h('div', null,
+      h('p', { class: 'selo' }, 'Painel'),
+      h('h2', null, apelido ? `Olá, ${apelido}!` : 'Seu painel de estudos'),
+      h('p', null, d.concluidos === d.total ? 'Você concluiu todos os módulos. Parabéns! 🎉' : 'Veja como está o seu avanço no curso.')),
+    d.proximo
+      ? h('a', { class: 'btn btn--primario btn--grande', href: '#' + d.proximo.id }, `${d.algumProgresso ? 'Continuar' : 'Começar'}: Módulo ${d.proximo.n}`)
+      : h('a', { class: 'btn btn--primario btn--grande', href: '#certificado' }, '🎓 Ver certificado'));
+
+  const geral = h('div', { class: 'geral' },
+    h('div', { class: 'geral__rotulo' }, h('span', null, 'Progresso do curso'), h('span', null, `${d.concluidos} de ${d.total} módulos (${pct}%)`)),
+    h('div', { class: 'progresso__trilho', role: 'progressbar', 'aria-label': 'Progresso do curso', 'aria-valuemin': 0, 'aria-valuemax': 100, 'aria-valuenow': pct },
+      h('div', { class: 'progresso__barra', estilo: { width: pct + '%' } })));
+
+  const kpi = (rotulo, valor, sub) => h('div', { class: 'kpi' },
+    h('span', { class: 'kpi__rotulo' }, rotulo), h('span', { class: 'kpi__valor' }, valor), h('span', { class: 'kpi__sub' }, sub));
+  const kpis = h('div', { class: 'kpis' },
+    kpi('Módulos concluídos', `${d.concluidos}/${d.total}`, `${pct}% do curso`),
+    kpi('Quizzes aprovados', `${d.quizAprovados}/${d.total}`, `nota mínima: ${NOTA_CERTIFICADO}%`),
+    kpi('Média nos quizzes', d.media === null ? '—' : d.media + '%', 'melhor nota de cada quiz'),
+    kpi('Tentativas de quiz', String(d.tentativas), 'somando todos os módulos'),
+    kpi('Laboratórios feitos', `${d.labsFeitos}/${LABS.length}`, 'exercícios práticos ao vivo'),
+    kpi('Checklist de prontidão', `${d.checklistMarcados}/${d.itensChecklist}`, 'itens marcados (Módulo 2)'),
+    kpi('Tempo de estudo', fmtSeg(d.segundosTotal), `${d.dias} ${d.dias === 1 ? 'dia' : 'dias'} de estudo`),
+    kpi('Sequência', `${d.sequencia} ${d.sequencia === 1 ? 'dia' : 'dias'}`, 'dias seguidos estudando'));
+
+  // Estimativa de tempo
+  const e = d.estimativa;
+  const faltam = d.total - d.concluidos;
+  const mediaDia = d.dias ? d.segundosTotal / 60 / d.dias : 0;
+  const estimativa = h('div', { class: 'estimativa' },
+    h('div', null,
+      h('span', { class: 'kpi__rotulo' }, 'Tempo restante estimado'),
+      h('span', { class: 'estimativa__valor' }, faltam === 0 ? 'Curso concluído! 🎉' : '≈ ' + fmtMin(e.minutos))),
+    h('p', { class: 'estimativa__texto' },
+      faltam === 0 ? 'Você terminou todos os módulos.' : `Faltam ${faltam} ${faltam === 1 ? 'módulo' : 'módulos'}. ` +
+        (e.personalizado ? 'A estimativa leva em conta o seu ritmo nos módulos que você já concluiu.' : 'A estimativa usa o tempo médio de cada módulo e passa a se ajustar ao seu ritmo depois que você concluir o primeiro.'),
+      faltam === 0 ? null : h('small', null,
+        `Estudando 30 minutos por dia, você termina em cerca de ${Math.max(1, Math.ceil(e.minutos / 30))} ${Math.ceil(e.minutos / 30) <= 1 ? 'dia' : 'dias'}.`,
+        mediaDia >= 5 ? ` No seu ritmo atual (${Math.round(mediaDia)} min por dia de estudo): cerca de ${Math.max(1, Math.ceil(e.minutos / mediaDia))} ${Math.ceil(e.minutos / mediaDia) <= 1 ? 'dia' : 'dias'}.` : '',
+        ' É só uma previsão: cada pessoa tem o seu ritmo.')));
+
+  // Módulos
+  const rotuloStatus = { concluido: ['badge--ok', 'Concluído'], andamento: ['badge--info', 'Em andamento'], novo: ['badge--neutro', 'Não iniciado'] };
+  const linhas = h('ul', { class: 'linhas' }, d.mods.map((m) => h('li', { class: 'linha linha--' + m.status },
+    h('span', { class: 'linha__num', 'aria-hidden': 'true' }, m.concluido ? '✓' : String(m.n)),
+    h('div', { class: 'linha__titulo' },
+      h('a', { href: '#' + m.id }, `Módulo ${m.n}: ${m.titulo}`),
+      h('span', { class: 'badge ' + rotuloStatus[m.status][0] }, h('i', { class: 'ponto' }), rotuloStatus[m.status][1])),
+    h('div', { class: 'linha__detalhes' },
+      h('span', null, m.nota ? `Quiz: ${m.nota.melhor}% (${m.nota.tentativas} ${m.nota.tentativas === 1 ? 'tentativa' : 'tentativas'})` : 'Quiz: não feito'),
+      h('span', null, m.labsTotal ? `Laboratórios: ${m.labsFeitos}/${m.labsTotal}` : 'Sem laboratório'),
+      h('span', null, 'Tempo: ' + fmtSeg(m.seg)),
+      h('span', null, `Previsto: ${m.estimativa} min`)))));
+
+  // Gráfico: nota de cada quiz
+  const colunas = h('div', { class: 'colunas', role: 'img', 'aria-label': 'Gráfico com a melhor nota de cada quiz: ' + d.mods.map((m) => `módulo ${m.n}, ${m.nota ? m.nota.melhor + '%' : 'sem nota'}`).join('; ') },
+    d.mods.map((m) => h('div', { class: 'coluna' },
+      h('span', { class: 'coluna__valor' }, m.nota ? m.nota.melhor + '%' : '—'),
+      h('div', { class: 'coluna__trilho' },
+        m.nota ? h('div', { class: 'coluna__barra' + (m.nota.melhor < NOTA_CERTIFICADO ? ' coluna__barra--baixa' : ''), estilo: { height: m.nota.melhor + '%' } }) : null),
+      h('span', { class: 'coluna__rotulo' }, 'M' + m.n))));
+
+  // Gráfico: tempo por módulo
+  const maior = Math.max(1, ...d.mods.map((m) => m.seg));
+  const barras = h('div', { class: 'barras' }, d.mods.map((m) => h('div', { class: 'barra-h' },
+    h('span', null, 'Módulo ' + m.n),
+    h('div', { class: 'barra-h__trilho' }, h('div', { class: 'barra-h__preench', estilo: { width: Math.round((m.seg / maior) * 100) + '%' } })),
+    h('span', { class: 'barra-h__valor' }, fmtSeg(m.seg)))));
+
+  // Laboratórios
+  const labsLista = h('ul', { class: 'labs-lista' }, LABS.map((l) => {
+    const quando = d.labs[l.id];
+    return h('li', null,
+      h('a', { href: '#' + l.id }, `🧪 ${l.titulo} (Módulo ${l.modulo.split('-')[1]})`),
+      quando ? h('span', { class: 'feito-txt' }, '✔ feito em ' + new Date(quando).toLocaleDateString('pt-BR')) : h('span', { class: 'pendente-txt' }, 'pendente'));
+  }));
+
+  const secao = (titulo, ...conteudo) => h('section', { class: 'painel__secao' }, h('h3', null, titulo), ...conteudo);
+
+  $('#painel').replaceChildren(
+    topo, geral, kpis,
+    secao('Quanto falta?', estimativa),
+    secao('Seus módulos', linhas),
+    secao('Notas dos quizzes', colunas,
+      h('p', { class: 'legenda' }, `A linha tracejada marca a nota mínima (${NOTA_CERTIFICADO}%). Verde: aprovado. Laranja: abaixo do mínimo. Você pode refazer o quiz quantas vezes quiser.`)),
+    secao('Tempo de estudo por módulo', barras,
+      h('p', { class: 'legenda' }, 'Conta só o tempo com o app aberto e em uso: se você ficar mais de 2 minutos sem tocar na tela, o relógio para.')),
+    secao('Laboratórios ao vivo', labsLista),
+    secao('Certificado', h('div', { class: 'caixa ' + (cert.liberado ? 'caixa--dica' : 'caixa--objetivos') },
+      cert.liberado
+        ? [h('strong', null, 'Seu certificado está liberado! 🎓'), h('a', { class: 'btn btn--primario btn--pequeno', href: '#certificado' }, 'Emitir certificado')]
+        : [h('strong', null, `${cert.itens.filter((i) => i.aprovado).length} de ${cert.itens.length} quizzes aprovados`),
+           'Para liberar o certificado, seja aprovado nos 7 quizzes (nota de 70% ou mais em cada um). ',
+           h('a', { href: '#certificado' }, 'Ver detalhes')])),
+    secao('Guardar o progresso',
+      h('p', null, salvoEm ? 'Último arquivo salvo em ' + new Date(salvoEm).toLocaleString('pt-BR', { dateStyle: 'long', timeStyle: 'short' }) + '.' : 'Você ainda não salvou o progresso em arquivo. Faça isso de vez em quando, para não perder nada se trocar de aparelho.'),
+      h('div', { class: 'lab__acoes' },
+        h('button', { class: 'btn btn--primario', type: 'button', onclick: salvarProgresso }, '💾 Salvar como…'),
+        h('button', { class: 'btn btn--secundario', type: 'button', onclick: abrirProgresso }, '📂 Abrir arquivo…'))));
+}
+
+function iniciarInicio() {
+  // Tempo total estimado, mostrado no texto de boas-vindas
+  const totalMin = Object.values(MIN_MODULO).reduce((t, v) => t + v, 0);
+  $('#inicio-tempo').textContent = 'cerca de ' + fmtMin(totalMin);
+
+  $('#btn-iniciar').addEventListener('click', () => {
+    if (!estudo.iniciadoEm) { estudo.iniciadoEm = new Date().toISOString(); salvarEstudo(); }
+    location.hash = '#modulo-1';
+  });
+  $('#btn-inicio-abrir').addEventListener('click', abrirProgresso);
+
+  // Ações do menu (hambúrguer). Cada botão reaproveita a função que já existe.
+  $('#menu-salvar').addEventListener('click', salvarProgresso);
+  $('#menu-abrir').addEventListener('click', abrirProgresso);
+  $('#menu-compartilhar').addEventListener('click', () => $('#btn-compartilhar-app').click());
+  $('#menu-instalar').addEventListener('click', () => $('#btn-instalar').click());
+  $('#menu-tema').addEventListener('click', () => $('#tema-btn').click());
+
+  document.addEventListener('quiz:aprovado', desenharInicio);
+  desenharInicio();
+}
+
+/* ---------------------------------------------------------------------
  * 12) INICIALIZAÇÃO
  * ------------------------------------------------------------------- */
 document.addEventListener('DOMContentLoaded', () => {
@@ -1180,6 +1542,9 @@ document.addEventListener('DOMContentLoaded', () => {
   iniciarBotoesCopiar();
   iniciarCertificado();
   iniciarProgressoEmArquivo();
+  iniciarRegistroDeLabs();
+  iniciarInicio();
+  iniciarCronometro();
   iniciarNavegacao();
   iniciarServiceWorker();
 });

@@ -21,7 +21,16 @@ a primeira opção de cada pergunta é a correta, e a ordem é embaralhada na te
 Ao ser aprovado nos 7 quizzes, o aluno pode emitir um **certificado de conclusão** (imagem PNG desenhada
 em `<canvas>`, sem enviar dados a lugar nenhum). Ele é de participação, sem validade oficial.
 
-O menu **Salvar / abrir progresso** grava o avanço em um arquivo `.json` (com seletor de pasta no Chrome/Edge do
+**Página inicial e Painel:** toda abertura do app (depois da tela de abertura) cai no Início. Antes de começar, ele
+mostra um texto curto sobre o curso e o botão **Iniciar**. Depois, vira um **painel**: progresso geral, módulos concluídos,
+notas e tentativas dos quizzes, laboratórios feitos, tempo de estudo (total e por módulo), dias e sequência de estudo e
+a **estimativa de tempo para terminar** (que se ajusta ao ritmo do aluno depois do primeiro módulo concluído).
+O tempo só conta com o app aberto e em uso (parado por mais de 2 minutos, o relógio para).
+O botão ☰, no canto superior direito, abre o menu: Painel, Salvar como…, Abrir arquivo…, Certificado, Compartilhar,
+Instalar (quando disponível), Tema, Glossário, além dos módulos e laboratórios.
+Atalhos do manifest e links no formato `?modulo=modulo-4` abrem direto no módulo indicado.
+
+O menu **Salvar como… / Abrir arquivo…** grava o avanço (módulos, notas, laboratórios, tempo de estudo) em um arquivo `.json` (com seletor de pasta no Chrome/Edge do
 computador; nos demais navegadores, por download) e permite abri-lo depois, inclusive em outro aparelho. Ao abrir,
 o app **soma** ao que já existe (nada é apagado), confere cada campo do arquivo e recusa arquivos inválidos.
 

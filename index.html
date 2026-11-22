@@ -49,10 +49,7 @@
 
   <!-- ============ CABEÇALHO ============ -->
   <header class="topo">
-    <button id="menu-btn" class="btn-icone" aria-label="Abrir menu" aria-controls="drawer" aria-expanded="false">
-      <span class="hamburger" aria-hidden="true"></span>
-    </button>
-    <a class="topo__marca" href="#modulo-1">PWA Brasil <small>(PT-BR)</small></a>
+    <a class="topo__marca" href="#inicio">PWA Brasil <small>(PT-BR)</small></a>
 
     <!-- Indicadores em tempo real: rede + Service Worker -->
     <div class="status" aria-live="polite">
@@ -67,6 +64,11 @@
     <button id="tema-btn" class="btn-icone" aria-label="Alternar tema claro/escuro" aria-pressed="false">
       <span id="tema-icone" aria-hidden="true">🌙</span>
     </button>
+
+    <!-- Hambúrguer no canto superior direito: abre o menu com ações, módulos e laboratórios -->
+    <button id="menu-btn" class="btn-icone" aria-label="Abrir menu" aria-controls="drawer" aria-expanded="false" aria-haspopup="true">
+      <span class="hamburger" aria-hidden="true"></span>
+    </button>
   </header>
 
   <!-- Banner "Nova versão disponível" (Módulo 6) -->
@@ -78,9 +80,9 @@
     </span>
   </div>
 
-  <!-- ============ MENU LATERAL (DRAWER) ============ -->
+  <!-- ============ MENU (abre pelo hambúrguer, à direita) ============ -->
   <div id="overlay" class="overlay" hidden></div>
-  <aside id="drawer" class="drawer" aria-label="Menu de módulos" aria-hidden="true">
+  <aside id="drawer" class="drawer" aria-label="Menu" aria-hidden="true">
     <div class="drawer__cabecalho">
       <strong>PWA Brasil <small>(PT-BR)</small></strong>
       <button id="fechar-menu" class="btn-icone" aria-label="Fechar menu">✕</button>
@@ -89,10 +91,22 @@
     <div class="progresso" aria-label="Seu progresso">
       <div class="progresso__trilho"><div id="progresso-barra" class="progresso__barra" style="width:0%"></div></div>
       <small id="progresso-texto">0 módulos concluídos</small>
-      <small><a href="#progresso">💾 Salvar ou abrir meu progresso</a></small>
     </div>
 
     <nav>
+      <p class="drawer__titulo">Ações</p>
+      <ul class="menu menu--acoes">
+        <li><a href="#inicio" data-modulo="inicio"><span class="menu__num" aria-hidden="true">🏠</span> Painel</a></li>
+        <li><button type="button" id="menu-salvar" class="menu__botao"><span class="menu__num" aria-hidden="true">💾</span> Salvar como…</button></li>
+        <li><button type="button" id="menu-abrir" class="menu__botao"><span class="menu__num" aria-hidden="true">📂</span> Abrir arquivo…</button></li>
+        <li><a href="#certificado" data-modulo="certificado"><span class="menu__num" aria-hidden="true">🎓</span> Certificado</a></li>
+        <li><button type="button" id="menu-compartilhar" class="menu__botao"><span class="menu__num" aria-hidden="true">📤</span> Compartilhar o app</button></li>
+        <li id="menu-instalar-item" hidden><button type="button" id="menu-instalar" class="menu__botao"><span class="menu__num" aria-hidden="true">⬇️</span> Instalar o app</button></li>
+        <li><button type="button" id="menu-tema" class="menu__botao"><span class="menu__num" aria-hidden="true">🌓</span> Tema claro/escuro</button></li>
+        <li><a href="#progresso" data-modulo="progresso"><span class="menu__num" aria-hidden="true">ℹ️</span> Como salvar e abrir</a></li>
+        <li><a href="#glossario" data-modulo="glossario"><span class="menu__num" aria-hidden="true">Aa</span> Glossário</a></li>
+      </ul>
+
       <p class="drawer__titulo">Módulos</p>
       <ul class="menu">
         <li><a href="#modulo-1" data-modulo="modulo-1"><span class="menu__num">1</span> Como a web funciona <em class="menu__ok" aria-hidden="true"></em></a></li>
@@ -113,20 +127,46 @@
         <li><a href="#lab-nativo" data-modulo="modulo-5">🧪 Compartilhar e Notificações</a></li>
         <li><a href="#lab-atualizacao" data-modulo="modulo-6">🧪 Ciclo de atualização</a></li>
       </ul>
-      <p class="drawer__titulo">Apoio</p>
-      <ul class="menu">
-        <li><a href="#progresso" data-modulo="progresso"><span class="menu__num" aria-hidden="true">💾</span> Salvar / abrir progresso</a></li>
-        <li><a href="#certificado" data-modulo="certificado"><span class="menu__num" aria-hidden="true">🎓</span> Certificado</a></li>
-        <li><a href="#glossario" data-modulo="glossario"><span class="menu__num" aria-hidden="true">Aa</span> Glossário</a></li>
-      </ul>
     </nav>
   </aside>
 
   <!-- ============ CONTEÚDO ============ -->
   <main id="conteudo" class="conteudo" tabindex="-1">
 
+    <!-- ================= INÍCIO: boas-vindas, que depois vira o PAINEL ================= -->
+    <section id="inicio" class="modulo" data-titulo="Início">
+
+      <!-- Mostrado até o aluno começar o curso -->
+      <div id="inicio-boasvindas">
+        <header class="modulo__cab">
+          <p class="selo">Bem-vindo(a)</p>
+          <h2>Aprenda PWA do zero, em português</h2>
+          <p class="lead">Um curso para quem nunca programou. Em 7 módulos curtos, você descobre o que é um aplicativo web progressivo (PWA), como ele funciona e como criar e publicar o seu.</p>
+        </header>
+
+        <p>Aqui você aprende fazendo: cada módulo traz explicações simples, exemplos de código e laboratórios que funcionam de verdade dentro deste próprio aplicativo. No fim de cada módulo, um quiz ajuda a fixar o conteúdo, e quem concluir tudo pode emitir um certificado.</p>
+
+        <ul class="lista-cards">
+          <li><strong>Do zero</strong>Não precisa saber programar. Começamos explicando o que é a web.</li>
+          <li><strong>Prática de verdade</strong>7 laboratórios ao vivo e um passo a passo para publicar o seu PWA.</li>
+          <li><strong>Funciona offline</strong>Depois da primeira visita, o curso abre até sem internet, e pode ser instalado como app.</li>
+        </ul>
+
+        <p>Tempo estimado: <strong id="inicio-tempo">cerca de 3 horas</strong>, no seu ritmo. Você pode parar e continuar quando quiser: o app guarda o seu progresso.</p>
+
+        <div class="inicio-acoes">
+          <button id="btn-iniciar" class="btn btn--primario btn--grande">Iniciar o curso →</button>
+          <button id="btn-inicio-abrir" class="btn btn--fantasma">Já tenho um arquivo de progresso</button>
+        </div>
+        <p class="nota">Dica: o botão ☰, no canto superior direito, abre o menu com os módulos, os laboratórios e as opções de salvar e abrir o seu progresso.</p>
+      </div>
+
+      <!-- Depois que o aluno inicia, esta área vira o painel (montado por app.js) -->
+      <div id="painel" hidden></div>
+    </section>
+
     <!-- ================= MÓDULO 1 ================= -->
-    <section id="modulo-1" class="modulo" data-titulo="Módulo 1 — Como a web funciona">
+    <section id="modulo-1" class="modulo" data-titulo="Módulo 1 — Como a web funciona" hidden>
       <header class="modulo__cab">
         <p class="selo">Módulo 1 de 7</p>
         <h2>Como a web funciona</h2>
@@ -144,7 +184,7 @@
       </div>
 
       <h3>Como usar este curso</h3>
-      <p>O curso tem 7 módulos, que você segue em ordem pelo menu (o botão com três tracinhos, no canto superior esquerdo). Cada módulo explica um assunto com exemplos simples. Alguns têm um <strong>laboratório ao vivo</strong>, onde você mexe em coisas de verdade, dentro deste próprio aplicativo. No fim de cada módulo há um <strong>quiz</strong> para fixar o que você aprendeu. Quando aparecer uma palavra difícil, explicamos na hora, e há um <a href="#glossario">glossário</a> no fim do menu.</p>
+      <p>O curso tem 7 módulos, que você segue em ordem. Para navegar, use o menu (o botão com três tracinhos, no canto superior direito): ele tem os módulos, os laboratórios e também as opções de <strong>salvar</strong> e <strong>abrir</strong> o seu progresso. A página <strong>Painel</strong>, que é a primeira que você vê, mostra como você está indo. Cada módulo explica um assunto com exemplos simples. Alguns têm um <strong>laboratório ao vivo</strong>, onde você mexe em coisas de verdade, dentro deste próprio aplicativo. No fim de cada módulo há um <strong>quiz</strong> para fixar o que você aprendeu. Quando aparecer uma palavra difícil, explicamos na hora, e há um <a href="#glossario">glossário</a> no fim do menu.</p>
       <p>Você vai encontrar estas caixinhas pelo caminho:</p>
       <div class="caixa caixa--analogia"><strong>🏠 Analogia</strong>Compara uma ideia técnica com algo do dia a dia.</div>
       <div class="caixa caixa--dica"><strong>💡 Dica</strong>Um atalho ou um jeito mais fácil de fazer algo.</div>
@@ -292,7 +332,7 @@ botao.addEventListener('click', () =&gt; {
       <div class="quiz lab" data-quiz="modulo-1"></div>
 
       <footer class="modulo__rodape">
-        <span></span>
+        <a class="btn btn--fantasma" href="#inicio" data-nav="inicio">← Painel</a>
         <button class="btn btn--sucesso btn-concluir" data-modulo="modulo-1">Marcar módulo como concluído</button>
         <a class="btn btn--primario" href="#modulo-2" data-nav="modulo-2">Próximo: O que é um PWA →</a>
       </footer>
@@ -914,7 +954,7 @@ self.addEventListener('message', (e) =&gt; {
         <p id="atualizacao-status" class="lab__saida" aria-live="polite">Versão do cache ativo: <strong id="versao-sw">—</strong></p>
         <p><strong>Para ver o banner aparecer:</strong></p>
         <ol class="passos">
-          <li>Com o app rodando no servidor local, abra o <code>sw.js</code> e mude a linha <code>const VERSAO = 'v1.5.0'</code> para <code>'v1.5.1'</code>.</li>
+          <li>Com o app rodando no servidor local, abra o <code>sw.js</code> e mude a linha <code>const VERSAO = 'v1.6.0'</code> para <code>'v1.6.1'</code>.</li>
           <li>Salve o arquivo.</li>
           <li>Volte ao app e clique em "Procurar nova versão".</li>
           <li>O banner "Nova versão disponível" surgirá no topo. Clique em "Atualizar agora" e veja a página recarregar com a versão nova.</li>
@@ -1308,7 +1348,7 @@ self.addEventListener('fetch', (evento) =&gt; {
       <footer class="modulo__rodape">
         <a class="btn btn--fantasma" href="#modulo-7" data-nav="modulo-7">← Voltar ao Módulo 7</a>
         <span></span>
-        <a class="btn btn--primario" href="#modulo-1" data-nav="modulo-1">Ir ao início</a>
+        <a class="btn btn--primario" href="#inicio" data-nav="inicio">Ir ao painel</a>
       </footer>
     </section>
 
