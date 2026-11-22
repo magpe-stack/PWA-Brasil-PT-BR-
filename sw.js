@@ -11,7 +11,7 @@
 
 // Versão do cache. Mudou o app? Incremente aqui: o navegador detecta que o
 // sw.js mudou byte a byte e dispara um novo ciclo install -> waiting -> activate.
-const VERSAO = 'v1.1.0';
+const VERSAO = 'v1.2.0';
 const CACHE_SHELL = `pwa-brasil-shell-${VERSAO}`;     // arquivos do App Shell (pré-cache)
 const CACHE_RUNTIME = `pwa-brasil-runtime-${VERSAO}`; // arquivos adicionados durante o uso
 
@@ -22,6 +22,7 @@ const APP_SHELL = [
   './index.html',
   './styles.css',
   './app.js',
+  './quiz.js',
   './manifest.webmanifest',
   './offline.html',
   './icons/favicon.svg',

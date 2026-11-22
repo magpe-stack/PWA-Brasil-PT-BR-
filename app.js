@@ -212,6 +212,18 @@ function iniciarProgresso() {
       if (concluidos.includes(id)) toast('Módulo concluído! 🎉');
     });
   });
+  // O quiz (quiz.js) avisa por um evento quando o aluno é aprovado.
+  // Aqui marcamos o módulo como concluído, sem desmarcar se já estava.
+  document.addEventListener('quiz:aprovado', (e) => {
+    const id = e.detail.modulo;
+    if (!concluidos.includes(id)) {
+      concluidos = [...concluidos, id];
+      Armazenamento.gravar('progresso-v2', concluidos);
+      desenharProgresso();
+      toast('Quiz aprovado! Módulo concluído. 🎉');
+    }
+  });
+
   desenharProgresso();
 }
 

@@ -319,6 +319,23 @@ input[type="text"], select {
 }
 .copiar:hover { background: #334155; }
 
+/* Quiz */
+.quiz { border-style: solid; margin-top: 2rem; }
+.quiz__melhor { font-weight: 600; color: var(--sucesso); }
+.quiz__pergunta { border: 1px solid var(--borda); border-radius: var(--raio); background: var(--bg); margin: .9rem 0; padding: .6rem 1rem .9rem; min-width: 0; }
+/* legend flutuante: o enunciado longo quebra linha dentro da caixa, sem cortar a borda */
+.quiz__pergunta legend { float: left; width: 100%; padding: 0; margin: 0 0 .6rem; font-weight: 700; }
+.quiz__pergunta legend + * { clear: both; }
+.quiz__opcao { display: flex; align-items: flex-start; gap: .6rem; padding: .5rem .6rem; margin: .3rem 0; min-height: 44px; border: 1px solid var(--borda); border-radius: 10px; cursor: pointer; }
+.quiz__opcao:hover { background: var(--bg-suave); }
+.quiz__opcao input { width: 20px; height: 20px; margin-top: .15rem; flex: none; accent-color: var(--primaria); }
+.quiz__opcao--certa { border-color: var(--sucesso); border-width: 2px; background: color-mix(in srgb, var(--sucesso) 12%, var(--bg)); }
+.quiz__opcao--certa span::after { content: "  ✔ resposta certa"; font-weight: 700; color: var(--sucesso); }
+.quiz__opcao--errada { border-color: var(--perigo); border-width: 2px; background: color-mix(in srgb, var(--perigo) 10%, var(--bg)); }
+.quiz__opcao--errada span::after { content: "  ✘ sua resposta"; font-weight: 700; color: var(--perigo); }
+.quiz__retorno { margin: .6rem 0 0; font-size: .92rem; color: var(--texto-suave); }
+.quiz__retorno:empty { display: none; }
+
 .glossario dt { padding-top: .6rem; border-top: 1px solid var(--borda); color: var(--primaria); }
 .glossario dt:first-child { border-top: 0; }
 .cartao h4 small { font-weight: 500; color: var(--texto-suave); }

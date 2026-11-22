@@ -141,7 +141,7 @@
       </div>
 
       <h3>Como usar este curso</h3>
-      <p>O curso tem 7 módulos, que você segue em ordem pelo menu (o botão com três tracinhos, no canto superior esquerdo). Cada módulo explica um assunto com exemplos simples. Alguns têm um <strong>laboratório ao vivo</strong>, onde você mexe em coisas de verdade, dentro deste próprio aplicativo. Quando aparecer uma palavra difícil, explicamos na hora, e há um <a href="#glossario">glossário</a> no fim do menu.</p>
+      <p>O curso tem 7 módulos, que você segue em ordem pelo menu (o botão com três tracinhos, no canto superior esquerdo). Cada módulo explica um assunto com exemplos simples. Alguns têm um <strong>laboratório ao vivo</strong>, onde você mexe em coisas de verdade, dentro deste próprio aplicativo. No fim de cada módulo há um <strong>quiz</strong> para fixar o que você aprendeu. Quando aparecer uma palavra difícil, explicamos na hora, e há um <a href="#glossario">glossário</a> no fim do menu.</p>
       <p>Você vai encontrar estas caixinhas pelo caminho:</p>
       <div class="caixa caixa--analogia"><strong>🏠 Analogia</strong>Compara uma ideia técnica com algo do dia a dia.</div>
       <div class="caixa caixa--dica"><strong>💡 Dica</strong>Um atalho ou um jeito mais fácil de fazer algo.</div>
@@ -286,6 +286,8 @@ botao.addEventListener('click', () =&gt; {
         </ul>
       </div>
 
+      <div class="quiz lab" data-quiz="modulo-1"></div>
+
       <footer class="modulo__rodape">
         <span></span>
         <button class="btn btn--sucesso btn-concluir" data-modulo="modulo-1">Marcar módulo como concluído</button>
@@ -401,6 +403,8 @@ botao.addEventListener('click', () =&gt; {
           <li>Tem um código só para todos os aparelhos, mas alguns recursos são mais limitados que nos apps nativos.</li>
         </ul>
       </div>
+
+      <div class="quiz lab" data-quiz="modulo-2"></div>
 
       <footer class="modulo__rodape">
         <a class="btn btn--fantasma" href="#modulo-1" data-nav="modulo-1">← Anterior</a>
@@ -543,6 +547,8 @@ botaoInstalar.addEventListener('click', async () =&gt; {
           <li>O navegador avisa por um evento quando o app pode ser instalado.</li>
         </ul>
       </div>
+
+      <div class="quiz lab" data-quiz="modulo-3"></div>
 
       <footer class="modulo__rodape">
         <a class="btn btn--fantasma" href="#modulo-2" data-nav="modulo-2">← Anterior</a>
@@ -700,6 +706,8 @@ self.addEventListener('fetch', (evento) =&gt; {
         </ul>
       </div>
 
+      <div class="quiz lab" data-quiz="modulo-4"></div>
+
       <footer class="modulo__rodape">
         <a class="btn btn--fantasma" href="#modulo-3" data-nav="modulo-3">← Anterior</a>
         <button class="btn btn--sucesso btn-concluir" data-modulo="modulo-4">Marcar módulo como concluído</button>
@@ -819,6 +827,8 @@ if (permissao === 'granted') {
         </ul>
       </div>
 
+      <div class="quiz lab" data-quiz="modulo-5"></div>
+
       <footer class="modulo__rodape">
         <a class="btn btn--fantasma" href="#modulo-4" data-nav="modulo-4">← Anterior</a>
         <button class="btn btn--sucesso btn-concluir" data-modulo="modulo-5">Marcar módulo como concluído</button>
@@ -901,7 +911,7 @@ self.addEventListener('message', (e) =&gt; {
         <p id="atualizacao-status" class="lab__saida" aria-live="polite">Versão do cache ativo: <strong id="versao-sw">—</strong></p>
         <p><strong>Para ver o banner aparecer:</strong></p>
         <ol class="passos">
-          <li>Com o app rodando no servidor local, abra o <code>sw.js</code> e mude a linha <code>const VERSAO = 'v1.1.0'</code> para <code>'v1.1.1'</code>.</li>
+          <li>Com o app rodando no servidor local, abra o <code>sw.js</code> e mude a linha <code>const VERSAO = 'v1.2.0'</code> para <code>'v1.2.1'</code>.</li>
           <li>Salve o arquivo.</li>
           <li>Volte ao app e clique em "Procurar nova versão".</li>
           <li>O banner "Nova versão disponível" surgirá no topo. Clique em "Atualizar agora" e veja a página recarregar com a versão nova.</li>
@@ -948,6 +958,8 @@ self.addEventListener('message', (e) =&gt; {
           <li>Teste em <code>localhost</code> e publique no GitHub Pages para ter HTTPS.</li>
         </ul>
       </div>
+
+      <div class="quiz lab" data-quiz="modulo-6"></div>
 
       <footer class="modulo__rodape">
         <a class="btn btn--fantasma" href="#modulo-5" data-nav="modulo-5">← Anterior</a>
@@ -1105,6 +1117,8 @@ self.addEventListener('fetch', (evento) =&gt; {
         </ul>
       </div>
 
+      <div class="quiz lab" data-quiz="modulo-7"></div>
+
       <footer class="modulo__rodape">
         <a class="btn btn--fantasma" href="#modulo-6" data-nav="modulo-6">← Anterior</a>
         <button class="btn btn--sucesso btn-concluir" data-modulo="modulo-7">Marcar módulo como concluído</button>
@@ -1207,5 +1221,6 @@ self.addEventListener('fetch', (evento) =&gt; {
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 
   <script src="app.js"></script>
+  <script src="quiz.js"></script>
 </body>
 </html>

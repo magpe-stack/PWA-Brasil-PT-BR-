@@ -14,6 +14,10 @@ HTML + CSS + JavaScript puros, sem frameworks e sem Workbox.
 7. Mão na massa: criar o seu primeiro PWA, passo a passo
 + Glossário
 
+Cada módulo termina com um **quiz** (5 a 6 perguntas, correção com explicação, melhor nota salva
+no navegador; 70% ou mais conclui o módulo). As perguntas ficam em `quiz.js`, no objeto `QUIZZES`:
+a primeira opção de cada pergunta é a correta, e a ordem é embaralhada na tela.
+
 Para adicionar um módulo novo: copie uma `<section class="modulo">` do `index.html`,
 inclua o botão `.btn-concluir` e um link no menu. O progresso se ajusta sozinho.
 
@@ -24,6 +28,7 @@ inclua o botão `.btn-concluir` e um link no menu. O progresso se ajusta sozinho
 ├── index.html              # Estrutura: splash, drawer, 5 módulos e laboratórios
 ├── styles.css              # Temas claro/escuro, responsividade, badges, código
 ├── app.js                  # Navegação, SW, instalação, inspetor de cache, progresso
+├── quiz.js                 # Perguntas e lógica dos quizzes
 ├── sw.js                   # Service Worker manual (pré-cache + 3 estratégias)
 ├── manifest.webmanifest    # Web App Manifest
 ├── offline.html            # Fallback offline de último recurso
