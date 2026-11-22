@@ -1,1 +1,97 @@
+# Este arquivo deve ficar em  .github/workflows/publicar.yml  (veja o LEIA-ME-AUTOMACAO.md).
+# Fluxo automático do PWA Brasil (PT-BR):
+#   1) verificar  -> confere a sintaxe e roda o teste de ponta a ponta (inclui o modo offline)
+#   2) lighthouse -> audita o site pronto e falha se acessibilidade/boas práticas caírem
+#   3) publicar   -> manda para o GitHub Pages (só no branch main)
+#
+# Como ligar: no repositório, vá em Settings -> Pages -> Source: "GitHub Actions".
+name: Verificar e publicar
 
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Conferir sintaxe dos scripts e do manifest
+        run: |
+          node --check app.js
+          node --check quiz.js
+          node --check sw.js
+          node -e "JSON.parse(require('fs').readFileSync('manifest.webmanifest','utf8')); console.log('manifest OK')"
+      - name: Instalar Playwright e o Chromium
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Teste de ponta a ponta (cache, offline, quiz)
+        run: node e2e.mjs
+
+  construir:
+    needs: verificar
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Montar a pasta _site só com os arquivos do app
+        run: |
+          mkdir _site
+          cp index.html styles.css app.js quiz.js sw.js manifest.webmanifest offline.html _site/
+          cp icon-192.png icon-512.png icon-maskable-512.png apple-touch-icon.png favicon.svg _site/
+      - name: Gerar a VERSAO do cache a partir do conteúdo dos arquivos
+        run: node atualizar-versao.mjs _site
+      - uses: actions/upload-artifact@v4
+        with:
+          name: site
+          path: _site
+
+  lighthouse:
+    needs: construir
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: site
+          path: _site
+      - uses: treosh/lighthouse-ci-action@v12
+        with:
+          configPath: ./lighthouserc.json
+          uploadArtifacts: true
+
+  publicar:
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: lighthouse
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: site
+          path: _site
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deploy
+        uses: actions/deploy-pages@v4
